@@ -1,13 +1,22 @@
 media:
   input: public/images
   output: /images
+  rename: safe
+  categories: [image]
 
 content:
   - name: experiments
     label: Experiments
     type: collection
     path: src/content/experiments
-
+    filename:
+      template: "{title}.md"
+      field: create
+    view:
+      primary: title
+      fields: [summary, status, kind, technologies, updated]
+      sort: updated
+      order: desc
     fields:
       - name: title
         label: Title
@@ -18,6 +27,9 @@ content:
         label: Summary
         type: text
         required: true
+        options:
+          minlength: 20
+          maxlength: 300
 
       - name: status
         label: Status
@@ -38,6 +50,7 @@ content:
         label: Launch path
         type: string
         required: true
+        description: Public path to the runnable experiment, such as /experiments/example/.
 
       - name: sourceUrl
         label: Source URL
@@ -47,19 +60,31 @@ content:
       - name: featured
         label: Featured
         type: boolean
+        default: false
 
       - name: created
         label: Created
         type: date
+        required: true
 
       - name: updated
         label: Updated
         type: date
+        required: true
 
       - name: image
         label: Preview image
         type: image
+        options:
+          path: experiments
+          extensions: [svg, png, jpg, jpeg, webp]
+          rename: safe
 
       - name: body
         label: Project notes
         type: rich-text
+        options:
+          format: markdown
+          switcher: true
+          path: experiments
+          rename: safe

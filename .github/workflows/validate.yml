@@ -16,5 +16,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Validate experiment catalog and files
-        run: node scripts/validate-lab.mjs
+      - name: Install dependencies
+        run: npm install
+      - name: Validate content and build Astro
+        run: npm run check
