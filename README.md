@@ -1,6 +1,6 @@
 # Erich's Lab
 
-A low-ceremony public shelf for small tools, studies, data experiments, and prototypes. Experiments can remain simple static builds or later graduate into their own repositories and services.
+A low-ceremony public shelf for small tools, studies, data experiments, and prototypes. Astro builds the catalog and project notes; standalone experiments remain portable under `public/experiments/`.
 
 ## Current experiment
 
@@ -8,70 +8,96 @@ A low-ceremony public shelf for small tools, studies, data experiments, and prot
 
 ## Run locally
 
-No build step is required.
+Requires Node.js 22 or newer.
 
 ```bash
-python3 -m http.server 8000 -d public
+npm install
+npm run dev
 ```
 
-Then open <http://localhost:8000>.
-
-Validate the catalog and experiment files with Node 22 or newer:
+Validate content and create a production build:
 
 ```bash
-node scripts/validate-lab.mjs
+npm run check
+```
+
+## Content editing with Pages CMS
+
+Pages CMS edits Markdown and media directly in this GitHub repository.
+
+- Experiment entries live in `src/content/experiments/`.
+- Preview media lives in `public/images/`.
+- The runnable applications live separately in `public/experiments/`.
+- `.pages.yml` defines the editor fields and media paths.
+
+The experiment filename becomes the stable project-notes URL. For example:
+
+```text
+src/content/experiments/music-graph-study.md
+→ /projects/music-graph-study/
+```
+
+Its `launchPath` points to the independently runnable application:
+
+```text
+/experiments/music-graph-study/
 ```
 
 ## Add an experiment
 
-1. Create `public/experiments/<slug>/`.
-2. Add an `index.html` clean-route entry point.
-3. Add the actual experiment assets.
-4. Add `experiment.json` using the existing experiment as a template.
-5. Add the same record to `public/experiments/experiments.json`.
-6. Run `node scripts/validate-lab.mjs`.
+1. Create `public/experiments/<slug>/` and add a clean-route `index.html`.
+2. Add the experiment assets to that folder.
+3. Create `src/content/experiments/<slug>.md` through Pages CMS or Git.
+4. Add an optional preview image under `public/images/experiments/`.
+5. Run `npm run check`.
 
-The catalog homepage is rendered from `public/experiments/experiments.json`. The duplicated per-experiment manifest keeps each experiment portable and self-describing; validation prevents the two records from drifting apart.
+## Deploy to Cloudflare Workers
 
-## Deploy to Cloudflare Workers Static Assets
-
-The repository includes `wrangler.jsonc` and serves the `public/` directory directly.
-
-Manual deployment:
+Astro outputs the static site to `dist/`; Wrangler deploys that directory through Workers Static Assets.
 
 ```bash
-npx wrangler deploy
+npm run deploy
 ```
 
-For automatic deployments, import this GitHub repository in **Cloudflare Workers & Pages → Create application → Import a repository**. Use the Worker name `erich-lab` so it matches `wrangler.jsonc`, and use `npx wrangler deploy` as the deploy command.
+The Worker name is `erich-lab`, and `wrangler.jsonc` also declares the custom domain `lab.erichdonahue.com`.
 
-Cloudflare will initially provide a `workers.dev` address. A custom hostname such as `lab.erichdonahue.com` can be attached later.
+### Enable automatic deployments
+
+The existing Worker must be connected to GitHub in Cloudflare:
+
+1. Open **Workers & Pages → erich-lab → Settings → Builds**.
+2. Select **Connect** and authorize `edonahue/erich-lab`.
+3. Set the production branch to `main` and root directory to `/`.
+4. Use `npm run build` as the build command.
+5. Use `npx wrangler deploy` as the deploy command.
+6. Save and deploy.
+
+After that, pushes to `main` deploy automatically and pull requests receive preview builds.
 
 ## Repository structure
 
 ```text
+src/
+├── content/experiments/       # Pages CMS-managed Markdown
+├── layouts/                   # Shared Astro layout
+├── pages/                     # Catalog, project notes, 404
+└── styles/                    # Shared site styling
 public/
-├── index.html                  # Lab catalog
-├── styles.css
-├── lab.js
-├── 404.html
-└── experiments/
-    ├── experiments.json       # Catalog source
-    └── music-graph-study/
-        ├── index.html          # Stable clean route
-        ├── experiment.json     # Portable metadata
-        └── music_graph_study_lab_complete_fixed.html
+├── images/experiments/        # CMS-managed preview media
+└── experiments/               # Independently runnable builds
 scripts/
 └── validate-lab.mjs
-.github/workflows/
-└── validate.yml
+.pages.yml
+astro.config.mjs
+package.json
 wrangler.jsonc
 ```
 
 ## Design intent
 
 - GitHub is the source of truth.
-- Cloudflare serves public static assets.
+- Pages CMS is the editorial interface, not a separate database.
+- Cloudflare serves the Astro output and future edge APIs.
 - The x600 is a development and build machine, not a required public host.
 - The ZimaBoard can later provide APIs for experiments that genuinely need a home backend.
-- Small standalone HTML builds are first-class projects; frameworks are introduced only when they earn their complexity.
+- Small standalone HTML builds remain first-class projects.
