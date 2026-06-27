@@ -1,11 +1,11 @@
-import { access, readFile } from 'node:fs/promises';
+import { access, readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 
 const root = process.cwd();
+const contentDir = path.join(root, 'src', 'content', 'experiments');
 const publicDir = path.join(root, 'public');
-const catalogPath = path.join(publicDir, 'experiments', 'experiments.json');
-const required = ['slug', 'title', 'summary', 'href', 'source', 'status', 'kind', 'technologies', 'created', 'updated', 'entry_file'];
+const requiredFields = ['title', 'summary', 'status', 'kind', 'technologies', 'launchPath', 'sourceUrl', 'featured', 'created', 'updated'];
 
 function fail(message) {
   console.error(`✗ ${message}`);
@@ -16,43 +16,31 @@ async function exists(file) {
   try { await access(file); return true; } catch { return false; }
 }
 
-const catalog = JSON.parse(await readFile(catalogPath, 'utf8'));
-if (catalog.schema_version !== 1) fail('experiments.json must use schema_version 1');
-if (!Array.isArray(catalog.experiments) || !catalog.experiments.length) fail('experiments.json must contain at least one experiment');
+const files = (await readdir(contentDir)).filter((file) => /\.mdx?$/.test(file));
+if (!files.length) fail('No experiment content files found in src/content/experiments.');
 
-const slugs = new Set();
-for (const experiment of catalog.experiments || []) {
-  const label = experiment.slug || experiment.title || 'unnamed experiment';
-  for (const field of required) {
-    if (experiment[field] === undefined || experiment[field] === '') fail(`${label}: missing ${field}`);
-  }
-  if (slugs.has(experiment.slug)) fail(`${label}: duplicate slug`);
-  slugs.add(experiment.slug);
-  if (!Array.isArray(experiment.technologies)) fail(`${label}: technologies must be an array`);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(experiment.created || '')) fail(`${label}: created must be YYYY-MM-DD`);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(experiment.updated || '')) fail(`${label}: updated must be YYYY-MM-DD`);
-
-  const directory = path.join(publicDir, 'experiments', experiment.slug);
-  const manifestPath = path.join(directory, 'experiment.json');
-  const routePath = path.join(directory, 'index.html');
-  const entryPath = path.join(directory, experiment.entry_file);
-
-  for (const [name, file] of [['manifest', manifestPath], ['clean-route index', routePath], ['entry file', entryPath]]) {
-    if (!(await exists(file))) fail(`${label}: ${name} not found at ${path.relative(root, file)}`);
+for (const file of files) {
+  const slug = file.replace(/\.mdx?$/, '');
+  const text = await readFile(path.join(contentDir, file), 'utf8');
+  const frontmatter = text.match(/^---\n([\s\S]*?)\n---/);
+  if (!frontmatter) {
+    fail(`${file}: missing YAML frontmatter`);
+    continue;
   }
 
-  if (await exists(manifestPath)) {
-    const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
-    for (const field of required) {
-      if (JSON.stringify(manifest[field]) !== JSON.stringify(experiment[field])) {
-        fail(`${label}: experiment.json field ${field} does not match experiments.json`);
-      }
-    }
+  for (const field of requiredFields) {
+    if (!new RegExp(`^${field}:`, 'm').test(frontmatter[1])) fail(`${file}: missing ${field}`);
   }
+
+  const launchPath = frontmatter[1].match(/^launchPath:\s*(.+)$/m)?.[1]?.trim();
+  if (!launchPath?.startsWith('/experiments/')) fail(`${file}: launchPath must begin with /experiments/`);
+
+  const experimentDir = path.join(publicDir, 'experiments', slug);
+  if (!(await exists(path.join(experimentDir, 'index.html')))) fail(`${file}: missing public/experiments/${slug}/index.html`);
 }
 
-for (const file of ['index.html', 'styles.css', 'lab.js', '404.html']) {
-  if (!(await exists(path.join(publicDir, file)))) fail(`Missing public/${file}`);
+for (const file of ['astro.config.mjs', 'src/content.config.ts', 'src/pages/index.astro', 'src/pages/404.astro', '.pages.yml', 'wrangler.jsonc']) {
+  if (!(await exists(path.join(root, file)))) fail(`Missing ${file}`);
 }
 
-if (!process.exitCode) console.log(`✓ Validated ${catalog.experiments.length} experiment(s) and the lab shell.`);
+if (!process.exitCode) console.log(`✓ Validated ${files.length} Astro experiment content file(s) and public launch routes.`);
