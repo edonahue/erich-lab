@@ -1,0 +1,31 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const experiments = await getCollection('experiments');
+  return experiments.map((experiment) => ({
+    params: { slug: experiment.id },
+    props: { experiment },
+  }));
+}
+
+const { experiment } = Astro.props;
+const { Content } = await render(experiment);
+---
+<BaseLayout title={`${experiment.data.title} · Erich's Lab`} description={experiment.data.summary}>
+  <section class="project-hero shell">
+    <div>
+      <p class="eyebrow">{experiment.data.kind} · {experiment.data.status}</p>
+      <h1>{experiment.data.title}</h1>
+      <p class="lede">{experiment.data.summary}</p>
+      <div class="tags">{experiment.data.technologies.map((technology) => <span>{technology}</span>)}</div>
+      <div class="hero-actions">
+        <a class="button primary" href={experiment.data.launchPath}>Launch experiment</a>
+        <a class="button" href={experiment.data.sourceUrl}>View source</a>
+      </div>
+    </div>
+    {experiment.data.image && <img src={experiment.data.image} alt="" />}
+  </section>
+  <article class="prose shell"><Content /></article>
+</BaseLayout>
