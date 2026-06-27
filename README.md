@@ -4,7 +4,7 @@ A low-ceremony public shelf for small tools, studies, data experiments, and prot
 
 ## Current experiment
 
-- **Music-Credit Graph Study Lab** — an adaptive architecture quiz with its full study guide embedded in one portable HTML file.
+- **Music-Credit Graph Study Lab** — an adaptive architecture quiz with its full study guide embedded in one portable HTML file. An interactive learning experience.
 
 ## Run locally
 
