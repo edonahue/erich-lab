@@ -1,0 +1,65 @@
+media:
+  input: public/images
+  output: /images
+
+content:
+  - name: experiments
+    label: Experiments
+    type: collection
+    path: src/content/experiments
+
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+
+      - name: summary
+        label: Summary
+        type: text
+        required: true
+
+      - name: status
+        label: Status
+        type: string
+        required: true
+
+      - name: kind
+        label: Type
+        type: string
+        required: true
+
+      - name: technologies
+        label: Technologies
+        type: string
+        list: true
+
+      - name: launchPath
+        label: Launch path
+        type: string
+        required: true
+
+      - name: sourceUrl
+        label: Source URL
+        type: string
+        required: true
+
+      - name: featured
+        label: Featured
+        type: boolean
+
+      - name: created
+        label: Created
+        type: date
+
+      - name: updated
+        label: Updated
+        type: date
+
+      - name: image
+        label: Preview image
+        type: image
+
+      - name: body
+        label: Project notes
+        type: rich-text
