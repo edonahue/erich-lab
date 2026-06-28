@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import site from '../data/site.json';
 
 interface Props {
   title?: string;
@@ -7,7 +8,7 @@ interface Props {
 }
 
 const {
-  title = "Erich's Lab",
+  title = site.title,
   description = 'Small tools, studies, and working experiments by Erich Donahue.',
 } = Astro.props;
 ---
@@ -17,26 +18,33 @@ const {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="theme-color" content="#f3f0e7" />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2225%22 fill=%22%2317242b%22/><text x=%2250%22 y=%2262%22 text-anchor=%22middle%22 font-size=%2240%22 fill=%22white%22>E/L</text></svg>" />
     <title>{title}</title>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header shell">
-      <a class="wordmark" href="/" aria-label="Erich's Lab home">
+      <a class="wordmark" href="/" aria-label={`${site.title} home`}>
         <span class="wordmark-mark" aria-hidden="true">E/L</span>
-        <span>Erich's Lab</span>
+        <span>{site.title}</span>
       </a>
       <nav aria-label="Primary navigation">
         <a href="/#experiments">Experiments</a>
         <a href="/#about">About</a>
-        <a href="https://github.com/edonahue/erich-lab">Source</a>
+        <a href={site.repositoryUrl}>Source</a>
       </nav>
     </header>
     <main id="main"><slot /></main>
     <footer class="site-footer shell">
-      <p>Built in public by <a href="https://erichdonahue.com">Erich Donahue</a>.</p>
-      <p><a href="https://github.com/edonahue/erich-lab">View source on GitHub</a>.</p>
+      <p>Built in public by <a href={site.mainSiteUrl}>Erich Donahue</a>.</p>
+      <p><a href={site.repositoryUrl}>View source on GitHub</a>.</p>
     </footer>
   </body>
 </html>
