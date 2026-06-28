@@ -129,7 +129,7 @@ async function buildOffline(manifest, directory) {
   }
 
   if (inlineScripts.length) {
-    const combined = `<script>\n{\n${safeScript(inlineScripts.join('\n\n'))}\n}\n</script>`;
+    const combined = `<script type="module">\n{\n${safeScript(inlineScripts.join('\n\n'))}\n}\n</script>`;
     html = html.replace('<!-- EXPERIMENT_INLINE_SCRIPTS -->', combined);
   }
 
