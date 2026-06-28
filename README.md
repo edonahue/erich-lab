@@ -4,14 +4,14 @@ A low-ceremony public shelf for small tools, studies, data experiments, and prot
 
 ## Current experiment
 
-- **Music-Credit Graph Study Lab** — an adaptive architecture quiz with its full study guide embedded in one portable HTML file. An interactive learning experience.
+- **Music-Credit Graph Study Lab** — an adaptive architecture quiz with its full study guide embedded in one portable HTML file.
 
 ## Run locally
 
 Requires Node.js 22 or newer.
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
@@ -23,35 +23,34 @@ npm run check
 
 ## Content editing with Pages CMS
 
-Pages CMS edits Markdown and media directly in this GitHub repository.
+Pages CMS edits content and media directly in this repository.
 
+- Homepage copy, global links, and the default social image live in `src/data/site.json`.
 - Experiment entries live in `src/content/experiments/`.
 - Preview media lives in `public/images/`.
-- The runnable applications live separately in `public/experiments/`.
-- `.pages.yml` defines the editor fields and media paths.
+- Runnable applications live in `public/experiments/`.
+- `.pages.yml` defines status choices, publication controls, and media fields.
 
-The experiment filename becomes the stable project-notes URL. For example:
+The experiment filename and its `slug` form stable URLs:
 
 ```text
 src/content/experiments/music-graph-study.md
 → /projects/music-graph-study/
+→ /experiments/music-graph-study/
 ```
 
-Its `launchPath` points to the independently runnable application:
-
-```text
-/experiments/music-graph-study/
-```
+The public launch path is derived from the slug, so it is not maintained as a second CMS field.
 
 ## Add an experiment
 
-1. Create `public/experiments/<slug>/` and add a clean-route `index.html`.
-2. Add the experiment assets to that folder.
+1. Create `public/experiments/<slug>/` with an `index.html` entry point.
+2. Add the application assets to that folder.
 3. Create `src/content/experiments/<slug>.md` through Pages CMS or Git.
-4. Add an optional preview image under `public/images/experiments/`.
-5. Run `npm run check`.
+4. Keep the filename and frontmatter `slug` identical.
+5. Add an optional preview image under `public/images/experiments/`.
+6. Run `npm run check`.
 
-## Deploy to Cloudflare Workers
+## Delivery and maintenance
 
 Astro outputs the static site to `dist/`; Wrangler deploys that directory through Workers Static Assets.
 
@@ -59,39 +58,28 @@ Astro outputs the static site to `dist/`; Wrangler deploys that directory throug
 npm run deploy
 ```
 
-The Worker name is `erich-lab`, and `wrangler.jsonc` also declares the custom domain `lab.erichdonahue.com`.
+Cloudflare build settings:
 
-### Enable automatic deployments
+- Production branch: `main`
+- Root directory: `/`
+- Build command: `npm run build`
+- Deploy command: `npx wrangler deploy`
 
-The existing Worker must be connected to GitHub in Cloudflare:
+The repository also includes:
 
-1. Open **Workers & Pages → erich-lab → Settings → Builds**.
-2. Select **Connect** and authorize `edonahue/erich-lab`.
-3. Set the production branch to `main` and root directory to `/`.
-4. Use `npm run build` as the build command.
-5. Use `npx wrangler deploy` as the deploy command.
-6. Save and deploy.
+- `public/_headers` for conservative browser headers and immutable Astro asset caching
+- `package-lock.json` for repeatable installs
+- low-volume Dependabot updates for npm and GitHub Actions
+- GitHub Actions validation and a complete Astro production build
 
-After that, pushes to `main` deploy automatically and pull requests receive preview builds.
+## Relationship to the main website
 
-## Repository structure
+The lab and main website are separate repositories, builds, and Cloudflare projects, but remain lightly connected:
 
-```text
-src/
-├── content/experiments/       # Pages CMS-managed Markdown
-├── layouts/                   # Shared Astro layout
-├── pages/                     # Catalog, project notes, 404
-└── styles/                    # Shared site styling
-public/
-├── images/experiments/        # CMS-managed preview media
-└── experiments/               # Independently runnable builds
-scripts/
-└── validate-lab.mjs
-.pages.yml
-astro.config.mjs
-package.json
-wrangler.jsonc
-```
+- Astro pages link to `erichdonahue.com` in the footer.
+- Standalone experiment wrappers link to both the lab and the main website.
+- A future main-site change should add a small, inconspicuous link to `lab.erichdonahue.com`.
+- A later design project may align typography, spacing, and other visual details without making the sites identical.
 
 ## Design intent
 
