@@ -35,8 +35,18 @@ const imageUrl = new URL(image, Astro.site);
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={imageUrl} />
-    <meta name="theme-color" content="#f3f0e7" />
+    <meta name="theme-color" content="#111820" data-theme-color />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2225%22 fill=%22%2317242b%22/><text x=%2250%22 y=%2262%22 text-anchor=%22middle%22 font-size=%2240%22 fill=%22white%22>E/L</text></svg>" />
+    <script is:inline>
+      (() => {
+        const key = 'erich-lab-theme';
+        const stored = window.localStorage.getItem(key);
+        const theme = stored === 'light' ? 'light' : 'dark';
+        document.documentElement.dataset.theme = theme;
+        const meta = document.querySelector('[data-theme-color]');
+        if (meta) meta.setAttribute('content', theme === 'light' ? '#f3f0e7' : '#111820');
+      })();
+    </script>
     <title>{title}</title>
   </head>
   <body>
@@ -46,16 +56,50 @@ const imageUrl = new URL(image, Astro.site);
         <span class="wordmark-mark" aria-hidden="true">E/L</span>
         <span>{site.title}</span>
       </a>
-      <nav aria-label="Primary navigation">
-        <a href="/#experiments">Experiments</a>
-        <a href="/#about">About</a>
-        <a href={site.repositoryUrl}>Source</a>
-      </nav>
+      <div class="site-header__right">
+        <nav aria-label="Primary navigation">
+          <a href="/#experiments">Experiments</a>
+          <a href="/#about">About</a>
+          <a href={site.repositoryUrl}>Source</a>
+        </nav>
+        <button class="theme-toggle" type="button" aria-label="Switch to light theme" aria-pressed="false" data-theme-toggle>
+          <span aria-hidden="true"></span>
+        </button>
+      </div>
     </header>
     <main id="main"><slot /></main>
     <footer class="site-footer shell">
       <p>Built in public by <a href={site.mainSiteUrl}>Erich Donahue</a>.</p>
       <p><a href={site.repositoryUrl}>View source on GitHub</a>.</p>
     </footer>
+    <script is:inline>
+      (() => {
+        const key = 'erich-lab-theme';
+        const root = document.documentElement;
+        const toggle = document.querySelector('[data-theme-toggle]');
+        const meta = document.querySelector('[data-theme-color]');
+        if (!toggle) return;
+
+        const apply = (theme, persist = false) => {
+          const next = theme === 'light' ? 'light' : 'dark';
+          root.dataset.theme = next;
+          if (persist) window.localStorage.setItem(key, next);
+          meta?.setAttribute('content', next === 'light' ? '#f3f0e7' : '#111820');
+          const light = next === 'light';
+          toggle.setAttribute('aria-label', light ? 'Switch to dark theme' : 'Switch to light theme');
+          toggle.setAttribute('aria-pressed', String(light));
+        };
+
+        toggle.addEventListener('click', () => {
+          apply(root.dataset.theme === 'light' ? 'dark' : 'light', true);
+        });
+
+        window.addEventListener('storage', (event) => {
+          if (event.key === key) apply(event.newValue, false);
+        });
+
+        apply(root.dataset.theme, false);
+      })();
+    </script>
   </body>
 </html>
