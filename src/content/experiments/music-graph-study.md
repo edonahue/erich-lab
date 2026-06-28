@@ -17,6 +17,15 @@ featured: true
 created: 2026-06-27
 updated: 2026-06-28
 image: /images/experiments/music-graph-study.svg
+offline:
+  status: full
+  note: The single-file edition includes the complete guide, quiz, flashcards, theme support, and browser-local progress tracking.
+  formats:
+    - type: html
+      label: Download offline HTML
+      href: /downloads/music-graph-study.html
+      filename: music-credit-graph-study-lab.html
+      note: Save one self-contained HTML file and open it in a modern browser without a network connection.
 ---
 
 This study lab captures the selected architecture for a music-credit graph that begins with a personal record collection, expands through adjacent credits, and then scales toward a broader catalog.
@@ -42,6 +51,10 @@ Dask remains an optional advanced study module rather than the operational job s
 
 The first playable release is a static daily or curated challenge that remains available without a live home service. Arbitrary two-artist search is a committed second phase, exposed through a bounded API only after the graph and failure behavior are proven.
 
+## Offline edition
+
+The guide, adaptive quiz, and flashcards are available as one generated HTML file. It contains its styles and scripts inline, preserves progress locally in the browser, and can be opened directly without running a local web server.
+
 ## Public and private boundaries
 
 These pages intentionally describe logical roles, technologies, and data flow rather than publishing a detailed map of the home network. Exact inventory, addressing, storage paths, deployment commands, backup procedures, and operational runbooks will live in a separate private infrastructure and data-operations repository.
@@ -53,3 +66,4 @@ These pages intentionally describe logical roles, technologies, and data flow ra
 - Flashcards for implementation review
 - Logical architecture diagrams without private topology details
 - Browser-local mastery tracking with no account or backend
+- A self-contained offline HTML download

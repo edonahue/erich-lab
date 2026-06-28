@@ -4,11 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
+    "dev": "npm run build:offline && astro dev",
+    "build:offline": "node scripts/build-offline.mjs",
+    "build": "npm run build:offline && astro build",
     "preview": "astro preview",
-    "validate": "node scripts/validate-lab.mjs",
-    "check": "npm run validate && npm run build",
+    "validate": "npm run build:offline && node scripts/validate-lab.mjs",
+    "check": "npm run validate && astro build",
     "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {

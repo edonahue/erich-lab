@@ -57,6 +57,7 @@
     nav a { color: inherit; text-decoration: none; opacity: .78; }
     nav a:hover, nav a:focus-visible { opacity: 1; text-decoration: underline; text-underline-offset: 3px; }
     .title { font-weight: 750; opacity: 1; }
+    .download-link { color: var(--accent); font-weight: 750; opacity: 1; }
     .theme-toggle {
       width: 42px;
       height: 26px;
@@ -77,7 +78,7 @@
     }
     .theme-toggle[aria-pressed="true"] span { transform: translateX(16px); }
     iframe { display: block; width: 100%; height: 100%; border: 0; background: var(--bg); }
-    @media (max-width: 620px) {
+    @media (max-width: 700px) {
       nav div a:first-child { display: none; }
       nav div { gap: 10px; }
     }
@@ -91,6 +92,7 @@
     <a class="title" href="/">Erich's Lab</a>
     <div>
       <a href="/projects/music-graph-study/">Project notes</a>
+      <a class="download-link" href="/downloads/music-graph-study.html" download="music-credit-graph-study-lab.html">Download HTML</a>
       <a href="https://erichdonahue.com">Main website</a>
       <button class="theme-toggle" type="button" aria-label="Switch to light theme" aria-pressed="false" data-theme-toggle><span aria-hidden="true"></span></button>
     </div>
