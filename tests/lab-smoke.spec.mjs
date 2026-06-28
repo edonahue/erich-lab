@@ -43,20 +43,6 @@ test('offline edition remains self-contained and interactive', async ({ page }) 
 
   await page.goto('/downloads/music-graph-study.html');
   await expect(page.getByText('Offline copy · Music-Credit Graph Study Lab')).toBeVisible();
-  if (pageErrors.length) {
-    const scripts = await page.locator('script').evaluateAll((items) =>
-      items.map((item, index) => ({
-        index,
-        type: item.type || 'classic',
-        src: item.getAttribute('src'),
-        dollars: (item.textContent.match(/const \$\s*=/g) || []).length,
-        questions: (item.textContent.match(/const Q\s*=/g) || []).length,
-        cards: (item.textContent.match(/const C\s*=/g) || []).length,
-        length: item.textContent.length,
-      })),
-    );
-    console.log('OFFLINE_SCRIPT_DEBUG', JSON.stringify({ pageErrors, scripts }));
-  }
   expect(pageErrors).toEqual([]);
 
   const referencesTab = page.getByRole('tab', { name: 'References' });
