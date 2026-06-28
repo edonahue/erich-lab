@@ -5,18 +5,89 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="An adaptive quiz and architecture guide for a distributed music-credit graph project.">
   <link rel="canonical" href="https://lab.erichdonahue.com/experiments/music-graph-study/">
+  <meta name="theme-color" content="#111820" data-theme-color>
   <title>Music-Credit Graph Study Lab</title>
+  <script>
+    (() => {
+      const key = 'erich-lab-theme';
+      const stored = window.localStorage.getItem(key);
+      const theme = stored === 'light' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = theme;
+      document.querySelector('[data-theme-color]')?.setAttribute('content', theme === 'light' ? '#f3f0e7' : '#111820');
+    })();
+  </script>
   <style>
-    :root { color-scheme: light; }
+    :root {
+      color-scheme: dark;
+      --bg: #111820;
+      --surface: #18232c;
+      --ink: #eef2ef;
+      --muted: #a9b5bb;
+      --line: rgba(238, 242, 239, .16);
+      --accent: #72a4b9;
+      --warm: #cf7a4c;
+    }
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #f3f0e7;
+      --surface: #fffdf7;
+      --ink: #17242b;
+      --muted: #647077;
+      --line: #d8d2c4;
+      --accent: #2f6077;
+      --warm: #a65d35;
+    }
     * { box-sizing: border-box; }
     html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
-    body { display: grid; grid-template-rows: 42px minmax(0, 1fr); background: #17242b; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
-    nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 14px; border-bottom: 1px solid rgba(255,255,255,.14); background: #17242b; color: #fffdf7; font-size: 13px; }
+    body {
+      display: grid;
+      grid-template-rows: 46px minmax(0, 1fr);
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+    }
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 13px;
+    }
     nav div { display: flex; align-items: center; gap: 16px; }
     nav a { color: inherit; text-decoration: none; opacity: .78; }
     nav a:hover, nav a:focus-visible { opacity: 1; text-decoration: underline; text-underline-offset: 3px; }
     .title { font-weight: 750; opacity: 1; }
-    iframe { display: block; width: 100%; height: 100%; border: 0; background: #f4f1e8; }
+    .theme-toggle {
+      width: 42px;
+      height: 26px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--surface) 70%, var(--ink) 10%);
+      cursor: pointer;
+      padding: 3px;
+    }
+    .theme-toggle span {
+      display: block;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: var(--warm);
+      box-shadow: inset -4px -3px 0 rgba(0, 0, 0, .18);
+      transition: transform 180ms ease, background-color 180ms ease;
+    }
+    .theme-toggle[aria-pressed="true"] span { transform: translateX(16px); background: var(--accent); }
+    iframe { display: block; width: 100%; height: 100%; border: 0; background: var(--bg); }
+    @media (max-width: 620px) {
+      nav div a:first-child { display: none; }
+      nav div { gap: 10px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .theme-toggle span { transition: none; }
+    }
   </style>
 </head>
 <body>
@@ -25,8 +96,110 @@
     <div>
       <a href="/projects/music-graph-study/">Project notes</a>
       <a href="https://erichdonahue.com">Main website</a>
+      <button class="theme-toggle" type="button" aria-label="Switch to light theme" aria-pressed="false" data-theme-toggle><span aria-hidden="true"></span></button>
     </div>
   </nav>
-  <iframe src="./music_graph_study_lab_complete_fixed.html" title="Music-Credit Graph Study Lab"></iframe>
+  <iframe src="./music_graph_study_lab_complete_fixed.html" title="Music-Credit Graph Study Lab" data-study-frame></iframe>
+  <script>
+    (() => {
+      const key = 'erich-lab-theme';
+      const root = document.documentElement;
+      const toggle = document.querySelector('[data-theme-toggle]');
+      const frame = document.querySelector('[data-study-frame]');
+      const meta = document.querySelector('[data-theme-color]');
+      const bridgeCss = `
+        :root {
+          color-scheme: dark;
+          --bg: #111820;
+          --panel: #18232c;
+          --ink: #eef2ef;
+          --muted: #a9b5bb;
+          --line: rgba(238, 242, 239, .16);
+          --accent: #72a4b9;
+          --accent2: #cf7a4c;
+          --good: #7fc59a;
+          --bad: #e28b8b;
+          --soft: #22313b;
+          --control: #1d2a34;
+          --selected: #203746;
+          --good-soft: #173226;
+          --good-line: #47785a;
+          --bad-soft: #3a2023;
+          --bad-line: #8a4d53;
+          --code-bg: #0b1117;
+          --code-ink: #eef2ef;
+          --card-shadow: 0 12px 34px rgba(0, 0, 0, .28);
+        }
+        :root[data-theme="light"] {
+          color-scheme: light;
+          --bg: #f4f1e8;
+          --panel: #fffdf7;
+          --ink: #1d2730;
+          --muted: #68727b;
+          --line: #d7d1c5;
+          --accent: #315c74;
+          --accent2: #9c5b31;
+          --good: #2f6e49;
+          --bad: #9a3f3f;
+          --soft: #ece7db;
+          --control: #ffffff;
+          --selected: #eef5f7;
+          --good-soft: #edf6ef;
+          --good-line: #a9ccb5;
+          --bad-soft: #faeeee;
+          --bad-line: #ddb5b5;
+          --code-bg: #1f2930;
+          --code-ink: #f2f4ef;
+          --card-shadow: 0 8px 28px rgba(30, 40, 45, .06);
+        }
+        body { background: var(--bg) !important; color: var(--ink) !important; }
+        .card, .control, .badge, .topnav { background: var(--panel) !important; border-color: var(--line) !important; box-shadow: var(--card-shadow) !important; }
+        .control select, .control button, .choice, .actions button, .guide-nav input { background: var(--control) !important; color: var(--ink) !important; border-color: var(--line) !important; }
+        .control button, .actions .primary { background: var(--accent) !important; color: #081319 !important; border-color: var(--accent) !important; }
+        :root[data-theme="light"] .control button,
+        :root[data-theme="light"] .actions .primary { color: #ffffff !important; }
+        .choice.selected, .guide-callout { background: var(--selected) !important; }
+        .choice.correct, .feedback.good { background: var(--good-soft) !important; border-color: var(--good-line) !important; }
+        .choice.incorrect, .feedback.bad { background: var(--bad-soft) !important; border-color: var(--bad-line) !important; }
+        .stat, .flash .back, .progress, .bar { background: var(--soft) !important; }
+        .topnav button.active { background: var(--control) !important; color: var(--ink) !important; }
+        .guide-content table, .guide-figure img { background: #fffdf7 !important; color: #1d2730 !important; }
+        .guide-content pre { background: var(--code-bg) !important; color: var(--code-ink) !important; }
+      `;
+
+      const syncFrame = (theme) => {
+        const doc = frame?.contentDocument;
+        if (!doc) return;
+        doc.documentElement.dataset.theme = theme;
+        let style = doc.getElementById('erich-lab-theme-bridge');
+        if (!style) {
+          style = doc.createElement('style');
+          style.id = 'erich-lab-theme-bridge';
+          style.textContent = bridgeCss;
+          doc.head.append(style);
+        }
+      };
+
+      const apply = (theme, persist = false) => {
+        const next = theme === 'light' ? 'light' : 'dark';
+        root.dataset.theme = next;
+        if (persist) window.localStorage.setItem(key, next);
+        meta?.setAttribute('content', next === 'light' ? '#f3f0e7' : '#111820');
+        const light = next === 'light';
+        toggle?.setAttribute('aria-label', light ? 'Switch to dark theme' : 'Switch to light theme');
+        toggle?.setAttribute('aria-pressed', String(light));
+        syncFrame(next);
+      };
+
+      toggle?.addEventListener('click', () => {
+        apply(root.dataset.theme === 'light' ? 'dark' : 'light', true);
+      });
+      frame?.addEventListener('load', () => syncFrame(root.dataset.theme));
+      window.addEventListener('storage', (event) => {
+        if (event.key === key) apply(event.newValue, false);
+      });
+      apply(root.dataset.theme, false);
+    })();
+  </script>
 </body>
 </html>
