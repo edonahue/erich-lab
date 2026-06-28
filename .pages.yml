@@ -5,19 +5,103 @@ media:
   categories: [image]
 
 content:
+  - name: site
+    label: Site settings
+    type: file
+    path: src/data/site.json
+    format: json
+    fields:
+      - name: title
+        label: Site title
+        type: string
+        required: true
+
+      - name: eyebrow
+        label: Hero eyebrow
+        type: string
+        required: true
+
+      - name: headline
+        label: Hero headline
+        type: text
+        required: true
+
+      - name: introduction
+        label: Hero introduction
+        type: text
+        required: true
+
+      - name: experimentsEyebrow
+        label: Experiments eyebrow
+        type: string
+        required: true
+
+      - name: experimentsHeading
+        label: Experiments heading
+        type: string
+        required: true
+
+      - name: principlesEyebrow
+        label: Principles eyebrow
+        type: string
+        required: true
+
+      - name: principlesHeading
+        label: Principles heading
+        type: string
+        required: true
+
+      - name: principles
+        label: Principles
+        type: object
+        list:
+          min: 1
+          max: 6
+          collapsible:
+            collapsed: true
+            summary: "{title}"
+        fields:
+          - name: title
+            label: Title
+            type: string
+            required: true
+          - name: description
+            label: Description
+            type: text
+            required: true
+
+      - name: mainSiteUrl
+        label: Main website URL
+        type: string
+        required: true
+
+      - name: repositoryUrl
+        label: Repository URL
+        type: string
+        required: true
+
   - name: experiments
     label: Experiments
     type: collection
     path: src/content/experiments
     filename:
-      template: "{title}.md"
+      template: "{slug}.md"
       field: create
     view:
       primary: title
-      fields: [summary, status, kind, technologies, updated]
+      fields: [summary, status, published, kind, technologies, updated]
       sort: updated
       order: desc
     fields:
+      - name: slug
+        label: Slug
+        type: string
+        required: true
+        pattern:
+          regex: "^[a-z0-9-]+$"
+          message: Use lowercase letters, numbers, and hyphens only.
+        description: Permanent URL identifier. Avoid changing this after publication.
+
       - name: title
         label: Title
         type: string
@@ -33,8 +117,10 @@ content:
 
       - name: status
         label: Status
-        type: string
+        type: select
         required: true
+        options:
+          values: [Idea, Prototype, Active, Paused, Archived]
 
       - name: kind
         label: Type
@@ -56,6 +142,12 @@ content:
         label: Source URL
         type: string
         required: true
+
+      - name: published
+        label: Published
+        type: boolean
+        default: false
+        description: Unpublished entries remain editable in Pages CMS but are omitted from the public site.
 
       - name: featured
         label: Featured

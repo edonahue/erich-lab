@@ -1,0 +1,26 @@
+{
+  "title": "Erich's Lab",
+  "eyebrow": "Workbench · studies · small builds",
+  "headline": "A public shelf for ideas that are useful before they are finished.",
+  "introduction": "Small tools, learning artifacts, data experiments, and prototypes. Each build can stay lightweight, graduate into a larger project, or simply remain an interesting working object.",
+  "experimentsEyebrow": "Current work",
+  "experimentsHeading": "Experiments",
+  "principlesEyebrow": "How the lab works",
+  "principlesHeading": "Low ceremony, durable ownership.",
+  "principles": [
+    {
+      "title": "Small is valid",
+      "description": "A single useful HTML file belongs here just as much as a larger app."
+    },
+    {
+      "title": "Content stays editable",
+      "description": "Pages CMS edits Markdown and media in GitHub while Astro turns them into the catalog."
+    },
+    {
+      "title": "Promotion is optional",
+      "description": "A promising build can later move into its own repository without breaking its lab URL."
+    }
+  ],
+  "mainSiteUrl": "https://erichdonahue.com",
+  "repositoryUrl": "https://github.com/edonahue/erich-lab"
+}
