@@ -1,3 +1,3 @@
 # Erich's Lab
 
-Audit branch abandoned; no changes intended for merge.
+A low-ceremony public shelf for small tools, studies, data experiments, and prototypes.
