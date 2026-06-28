@@ -8,9 +8,14 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: validate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
@@ -21,3 +26,7 @@ jobs:
         run: npm ci
       - name: Validate content and build Astro
         run: npm run check
+      - name: Install Chromium for smoke tests
+        run: npx --yes --package=@playwright/test@1.55.0 playwright install --with-deps chromium
+      - name: Run browser smoke tests
+        run: npm run test:smoke
