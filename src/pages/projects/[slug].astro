@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import DownloadMenu from '../../components/DownloadMenu.astro';
 
 export async function getStaticPaths() {
   const experiments = await getCollection('experiments', ({ data }) => data.published);
@@ -27,8 +28,10 @@ const launchPath = `/experiments/${experiment.data.slug}/`;
       <div class="tags">{experiment.data.technologies.map((technology) => <span>{technology}</span>)}</div>
       <div class="hero-actions">
         <a class="button primary" href={launchPath}>Launch experiment</a>
+        <DownloadMenu offline={experiment.data.offline} />
         <a class="button" href={experiment.data.sourceUrl}>View source</a>
       </div>
+      {experiment.data.offline?.note && <p class="download-note">{experiment.data.offline.note}</p>}
     </div>
     {experiment.data.image && <img src={experiment.data.image} alt="" />}
   </section>
