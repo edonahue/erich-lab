@@ -1,7 +1,7 @@
 ---
 slug: music-graph-study
 title: Music-Credit Graph Study Lab
-summary: An adaptive architecture guide for a collection-seeded, distributed music-credit graph and its static-first public game.
+summary: A concept guide, architecture plan, adaptive quiz, and flashcard lab for a distributed music-credit graph.
 status: Prototype
 kind: Study tool
 technologies:
@@ -19,51 +19,61 @@ updated: 2026-06-28
 image: /images/experiments/music-graph-study.svg
 offline:
   status: full
-  note: The single-file edition includes the complete guide, quiz, flashcards, theme support, and browser-local progress tracking.
+  note: The single-file edition includes the complete build plan, concept guide, official-reference links, quiz, flashcards, theme support, and browser-local progress tracking.
   formats:
     - type: html
       label: Download offline HTML
       href: /downloads/music-graph-study.html
       filename: music-credit-graph-study-lab.html
-      note: Save one self-contained HTML file and open it in a modern browser without a network connection.
+      note: Save one self-contained HTML file and open it in a modern browser without a local server. External documentation links still require connectivity.
 ---
 
-This study lab captures the selected architecture for a music-credit graph that begins with a personal record collection, expands through adjacent credits, and then scales toward a broader catalog.
+This study lab now separates transferable technology concepts from the decisions made for one specific music-credit graph build.
 
-## Architecture direction
+## Build plan
 
-An SSD-backed x86 control node coordinates four Raspberry Pi 3B+ workers over a compact wired network. An optional workstation-class machine can accelerate large data builds without becoming a dependency for the public experience.
+The project begins with a private collection-derived seed, expands through adjacent catalog credits, and then scales toward a broader evidence-bearing graph. An SSD-backed x86 host initially performs the Ansible control-node, Docker Swarm manager, and application-state roles. Four Raspberry Pi 3B+ workers run a consistent 64-bit operating system and execute bounded jobs against versioned read-only graph snapshots.
 
-The selected stack uses:
+The guide explicitly documents the tradeoffs:
 
-- Ansible for repeatable host setup
-- Docker Swarm for service placement
-- Redis and RQ for independent Python work batches
-- Parquet and DuckDB for durable analytical data
-- PostgreSQL for search, challenge, and snapshot state
-- Compact memory-mapped adjacency arrays for the production graph
-- NetworkX for small fixtures and algorithm validation
-- Astro with a Svelte island for the public game
+- A single Swarm manager is intentionally simple but not highly available
+- PostgreSQL, Redis, and canonical snapshots are pinned and backed up rather than treated as portable stateless services
+- Redis and RQ handle operational background jobs, while Dask remains an optional advanced experiment
+- Parquet, DuckDB, and PostgreSQL have distinct analytical and transactional responsibilities
+- Memory-mapped adjacency arrays are a leading design subject to a benchmark gate, not a foregone conclusion
+- The private collection seeds development, while public outputs use derived catalog paths and aggregate descriptions
+- Static daily or curated challenges ship before bounded live arbitrary-artist search
 
-Dask remains an optional advanced study module rather than the operational job system.
+## Concept guide
 
-## Product sequence
+Dedicated sections explain the underlying tools independently of this project, including:
 
-The first playable release is a static daily or curated challenge that remains available without a live home service. Arbitrary two-artist search is a committed second phase, exposed through a bounded API only after the graph and failure behavior are proven.
+- Ansible control nodes, inventories, playbooks, and idempotency
+- Containers, images, and multi-platform builds
+- Swarm managers, workers, services, tasks, and single-manager recovery
+- RQ job queues compared with Dask task graphs
+- Parquet, DuckDB, and PostgreSQL
+- Bipartite graphs, projections, breadth-first search, and evidence paths
+- Compact adjacency arrays and memory mapping
+- Typed APIs, static-first delivery, Cloudflare Tunnel, and Tailscale
+- Testing layers, provenance, observability, and Discogs data-use boundaries
+
+Each concept includes an “Applied here” explanation, practical examples where useful, and links to official or primary documentation.
+
+## Study modes
+
+The adaptive quiz and flashcards are split into:
+
+- **Technology concepts** for transferable understanding
+- **Build decisions** for the selected architecture and its tradeoffs
+- **Mixed review** for combined retrieval practice
+
+Concept and build-decision mastery are tracked separately in the browser.
 
 ## Offline edition
 
-The guide, adaptive quiz, and flashcards are available as one generated HTML file. It contains its styles and scripts inline, preserves progress locally in the browser, and can be opened directly without running a local web server.
+The full guide, exercises, references, quiz, and flashcards are generated as one downloadable HTML file. It contains its styles and scripts inline, preserves progress locally, and can be opened directly without running a local web server. External reference links naturally require a connection.
 
 ## Public and private boundaries
 
-These pages intentionally describe logical roles, technologies, and data flow rather than publishing a detailed map of the home network. Exact inventory, addressing, storage paths, deployment commands, backup procedures, and operational runbooks will live in a separate private infrastructure and data-operations repository.
-
-## What is included
-
-- A revised architecture and technology guide
-- Adaptive questions covering the selected stack
-- Flashcards for implementation review
-- Logical architecture diagrams without private topology details
-- Browser-local mastery tracking with no account or backend
-- A self-contained offline HTML download
+These pages describe logical roles, technologies, algorithms, tradeoffs, and measured outcomes rather than publishing a detailed map of the home network. Exact inventory, collection membership, addressing, storage paths, deployment commands, backup procedures, and operational runbooks remain private.
