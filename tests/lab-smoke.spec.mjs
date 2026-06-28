@@ -30,10 +30,11 @@ test('catalog, project notes, wrapper, and offline edition stay connected', asyn
   expect(stored).toBeTruthy();
 
   await frame.getByRole('tab', { name: 'Flashcards' }).click();
-  const reveal = frame.getByRole('button', { name: 'Reveal' });
+  const reveal = frame.locator('#reveal');
   await expect(reveal).toHaveAttribute('aria-expanded', 'false');
   await reveal.click();
   await expect(reveal).toHaveAttribute('aria-expanded', 'true');
+  await expect(reveal).toHaveText('Hide');
 
   await page.goto('/downloads/music-graph-study.html');
   await expect(page.getByText('Offline copy · Music-Credit Graph Study Lab')).toBeVisible();
