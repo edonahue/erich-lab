@@ -1,0 +1,29 @@
+---
+interface OfflineFormat {
+  type: 'html' | 'zip' | 'pdf';
+  label: string;
+  href: string;
+  filename?: string;
+  note?: string;
+}
+
+interface Props {
+  offline?: {
+    status: 'full' | 'limited';
+    note?: string;
+    formats: OfflineFormat[];
+  };
+}
+
+const { offline } = Astro.props;
+---
+{offline && offline.formats.map((format) => (
+  <a
+    class="button"
+    href={format.href}
+    download={format.filename || true}
+    title={format.note || offline.note || undefined}
+  >
+    {format.label}
+  </a>
+))}
