@@ -24,7 +24,8 @@ npm run check
 Run the browser smoke suite after a production build:
 
 ```bash
-npx --yes --package=@playwright/test@1.55.0 playwright install chromium
+npm install --no-save --package-lock=false @playwright/test@1.55.0
+npx playwright install chromium
 npm run test:smoke
 ```
 
