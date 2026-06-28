@@ -54,8 +54,8 @@
   let answered = false;
   let cardIndex = 0;
 
-  const $ = (selector) => document.querySelector(selector);
-  const $$ = (selector) => [...document.querySelectorAll(selector)];
+  const selectOne = (selector) => document.querySelector(selector);
+  const selectAll = (selector) => [...document.querySelectorAll(selector)];
   const trackLabel = (track) => (track === 'concept' ? 'Technology concept' : 'Build decision');
   const rate = (value) => (value?.n ? Math.round((100 * value.ok) / value.n) : null);
   const questionKey = (question) => `${question.t}|${question.c}|${question.q}`;
@@ -72,9 +72,9 @@
   }
 
   function refreshCategories() {
-    const select = $('#cat');
+    const select = selectOne('#cat');
     const previous = select.value;
-    const categories = [...new Set(questionsForTrack($('#track').value).map((question) => question.c))].sort();
+    const categories = [...new Set(questionsForTrack(selectOne('#track').value).map((question) => question.c))].sort();
     select.innerHTML = '<option>All</option>' + categories.map((category) => `<option>${category}</option>`).join('');
     if (categories.includes(previous)) select.value = previous;
   }
@@ -97,9 +97,9 @@
   }
 
   function startSession() {
-    const track = $('#track').value;
-    const category = $('#cat').value;
-    const mode = $('#mode').value;
+    const track = selectOne('#track').value;
+    const category = selectOne('#cat').value;
+    const mode = selectOne('#mode').value;
 
     let questions = questionsForTrack(track).map((question) => ({ ...question, key: questionKey(question) }));
     if (category !== 'All') questions = questions.filter((question) => question.c === category);
@@ -118,7 +118,7 @@
   }
 
   function drawQuestion() {
-    const box = $('#qbox');
+    const box = selectOne('#qbox');
     if (!activeQuestions.length) {
       box.innerHTML = '<h2>No questions match these filters</h2><p class="small">Choose another track or category.</p>';
       return;
@@ -126,8 +126,8 @@
 
     if (questionIndex >= activeQuestions.length) {
       box.innerHTML = '<h2>Session complete</h2><p class="small">Use the mastery panel to choose the next area to review.</p><div class="actions"><button class="primary" id="again">Start again</button></div>';
-      $('#again').addEventListener('click', startSession);
-      $('#again').focus();
+      selectOne('#again').addEventListener('click', startSession);
+      selectOne('#again').focus();
       return;
     }
 
@@ -143,16 +143,16 @@
       <div class="feedback" id="fb" role="status" aria-live="polite"></div>
       <div class="actions"><button class="primary" id="check">Check</button><button id="next" disabled>Next</button></div>`;
 
-    $$('.choice').forEach((choice) => {
+    selectAll('.choice').forEach((choice) => {
       choice.addEventListener('click', () => {
         if (answered) return;
         selectedAnswer = Number(choice.dataset.n);
-        $$('.choice').forEach((item) => item.classList.remove('sel'));
+        selectAll('.choice').forEach((item) => item.classList.remove('sel'));
         choice.classList.add('sel');
       });
     });
-    $('#check').addEventListener('click', checkAnswer);
-    $('#next').addEventListener('click', () => {
+    selectOne('#check').addEventListener('click', checkAnswer);
+    selectOne('#next').addEventListener('click', () => {
       questionIndex += 1;
       drawQuestion();
     });
@@ -173,30 +173,30 @@
     S.track[question.t].ok += Number(correct);
     S.seen[question.key] = (S.seen[question.key] || 0) + 1;
 
-    $$('.choice').forEach((choice, index) => {
+    selectAll('.choice').forEach((choice, index) => {
       choice.querySelector('input').disabled = true;
       if (index === question.a) choice.classList.add('good');
       else if (index === selectedAnswer) choice.classList.add('bad');
     });
 
-    const feedback = $('#fb');
+    const feedback = selectOne('#fb');
     feedback.className = 'feedback show';
     feedback.innerHTML = `<strong>${correct ? 'Correct' : 'Review this one'}</strong><br>${question.w}`;
-    $('#check').disabled = true;
-    $('#next').disabled = false;
-    $('#next').focus();
+    selectOne('#check').disabled = true;
+    selectOne('#next').disabled = false;
+    selectOne('#next').focus();
     save();
   }
 
   function renderStats() {
-    $('#n').textContent = S.n;
-    $('#acc').textContent = S.n ? `${rate(S)}%` : '—';
-    $('#conceptAcc').textContent = S.track.concept.n ? `${rate(S.track.concept)}%` : '—';
-    $('#buildAcc').textContent = S.track.build.n ? `${rate(S.track.build)}%` : '—';
+    selectOne('#n').textContent = S.n;
+    selectOne('#acc').textContent = S.n ? `${rate(S)}%` : '—';
+    selectOne('#conceptAcc').textContent = S.track.concept.n ? `${rate(S.track.concept)}%` : '—';
+    selectOne('#buildAcc').textContent = S.track.build.n ? `${rate(S.track.build)}%` : '—';
 
-    const track = $('#track')?.value || 'mixed';
+    const track = selectOne('#track')?.value || 'mixed';
     const categories = [...new Set(questionsForTrack(track).map((question) => question.c))].sort();
-    $('#bars').innerHTML = categories
+    selectOne('#bars').innerHTML = categories
       .map((category) => {
         const score = categoryScore(track, category);
         const value = rate(score) || 0;
@@ -206,7 +206,7 @@
   }
 
   function selectedCards() {
-    const deck = $('#deck').value;
+    const deck = selectOne('#deck').value;
     return deck === 'mixed' ? C : C.filter((card) => card.t === deck);
   }
 
@@ -214,15 +214,15 @@
     const cards = selectedCards();
     if (!cards.length) return;
     const card = cards[cardIndex % cards.length];
-    $('#cardKind').textContent = trackLabel(card.t);
-    $('#front').textContent = card.f;
-    $('#back').textContent = card.b;
-    $('#back').classList.remove('on');
-    $('#reveal').textContent = 'Reveal';
-    $('#reveal').setAttribute('aria-expanded', 'false');
-    $('#count').textContent = `Card ${(cardIndex % cards.length) + 1} of ${cards.length}`;
+    selectOne('#cardKind').textContent = trackLabel(card.t);
+    selectOne('#front').textContent = card.f;
+    selectOne('#back').textContent = card.b;
+    selectOne('#back').classList.remove('on');
+    selectOne('#reveal').textContent = 'Reveal';
+    selectOne('#reveal').setAttribute('aria-expanded', 'false');
+    selectOne('#count').textContent = `Card ${(cardIndex % cards.length) + 1} of ${cards.length}`;
 
-    const source = $('#cardSource');
+    const source = selectOne('#cardSource');
     if (card.s) {
       source.innerHTML = `<a href="${card.s}" target="_blank" rel="noopener">Official reference</a>`;
     } else {
@@ -232,7 +232,7 @@
   }
 
   function activateTab(button, moveFocus = false) {
-    $$('.topnav [role="tab"]').forEach((item) => {
+    selectAll('.topnav [role="tab"]').forEach((item) => {
       const active = item === button;
       item.classList.toggle('on', active);
       item.setAttribute('aria-selected', String(active));
@@ -247,7 +247,7 @@
     window.scrollTo(0, 0);
   }
 
-  const tabs = $$('.topnav [role="tab"]');
+  const tabs = selectAll('.topnav [role="tab"]');
   tabs.forEach((button, index) => {
     button.addEventListener('click', () => activateTab(button));
     button.addEventListener('keydown', (event) => {
@@ -263,12 +263,12 @@
     });
   });
 
-  $('#track').addEventListener('change', () => {
+  selectOne('#track').addEventListener('change', () => {
     refreshCategories();
     renderStats();
   });
-  $('#start').addEventListener('click', startSession);
-  $('#reset').addEventListener('click', () => {
+  selectOne('#start').addEventListener('click', startSession);
+  selectOne('#reset').addEventListener('click', () => {
     if (confirm('Reset all saved concept and build-decision progress?')) {
       try {
         localStorage.removeItem(STORAGE_KEY);
@@ -278,20 +278,20 @@
       startSession();
     }
   });
-  $('#deck').addEventListener('change', () => {
+  selectOne('#deck').addEventListener('change', () => {
     cardIndex = 0;
     drawCard();
   });
-  $('#reveal').addEventListener('click', () => {
-    const answer = $('#back');
-    const source = $('#cardSource');
+  selectOne('#reveal').addEventListener('click', () => {
+    const answer = selectOne('#back');
+    const source = selectOne('#cardSource');
     const revealed = !answer.classList.contains('on');
     answer.classList.toggle('on', revealed);
     source.classList.toggle('on', revealed && Boolean(source.textContent));
-    $('#reveal').textContent = revealed ? 'Hide' : 'Reveal';
-    $('#reveal').setAttribute('aria-expanded', String(revealed));
+    selectOne('#reveal').textContent = revealed ? 'Hide' : 'Reveal';
+    selectOne('#reveal').setAttribute('aria-expanded', String(revealed));
   });
-  $('#nextCard').addEventListener('click', () => {
+  selectOne('#nextCard').addEventListener('click', () => {
     cardIndex += 1;
     drawCard();
   });
