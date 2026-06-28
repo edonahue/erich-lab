@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A concept guide, architecture plan, adaptive quiz, and flashcard lab for a distributed music-credit graph project."
+    />
+    <meta name="robots" content="noindex" />
+    <title>Music-Credit Graph Study Lab</title>
+    <link rel="stylesheet" href="./study.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header>
+        <div>
+          <h1>Music-Credit Graph<br />Study Lab</h1>
+          <div class="sub">
+            Learn the underlying tools and distributed-systems concepts separately from the decisions made for this
+            particular music-credit graph.
+          </div>
+        </div>
+        <div class="badge">Progress stays local</div>
+      </header>
+
+      <div class="topnav" role="tablist" aria-label="Study lab sections">
+        <button id="tab-build" class="on" role="tab" aria-selected="true" aria-controls="build" data-v="build">
+          Build plan
+        </button>
+        <button
+          id="tab-concepts"
+          role="tab"
+          aria-selected="false"
+          aria-controls="concepts"
+          data-v="concepts"
+          tabindex="-1"
+        >
+          Concepts
+        </button>
+        <button id="tab-quiz" role="tab" aria-selected="false" aria-controls="quiz" data-v="quiz" tabindex="-1">
+          Quiz
+        </button>
+        <button
+          id="tab-flash"
+          role="tab"
+          aria-selected="false"
+          aria-controls="flash"
+          data-v="flash"
+          tabindex="-1"
+        >
+          Flashcards
+        </button>
+        <button
+          id="tab-references"
+          role="tab"
+          aria-selected="false"
+          aria-controls="references"
+          data-v="references"
+          tabindex="-1"
+        >
+          References
+        </button>
+      </div>
+
+      <section id="build" class="view on" role="tabpanel" aria-labelledby="tab-build">
+        <article class="card guide">
+          <h1>Project build plan</h1>
+          <div class="callout">
+            Project decisions are labeled as decisions—not universal truths. The architecture should remain
+            understandable, recoverable, and useful even when the home cluster is unavailable.
+          </div>
+
+          <h2>1. Goal and product sequence</h2>
+          <p>
+            The project turns music-release credits into evidence-backed paths between artists. It begins with a private
+            seed derived from a personal record collection, expands through adjacent catalog credits, and then scales
+            toward a broader catalog graph.
+          </p>
+          <ol>
+            <li><strong>Static MVP:</strong> daily or curated challenges, precomputed evidence paths, and published findings.</li>
+            <li><strong>Committed phase two:</strong> bounded arbitrary two-artist search through a live API.</li>
+            <li><strong>Later modes:</strong> manual relay, hidden contributor, role constraints, and collection-inspired challenges.</li>
+          </ol>
+
+          <h2>2. Logical roles</h2>
+          <div class="table">
+            <table>
+              <tr>
+                <th>Role</th>
+                <th>Responsibility in this build</th>
+                <th>Important distinction</th>
+              </tr>
+              <tr>
+                <td>Infrastructure control host</td>
+                <td>Runs Ansible and applies repeatable host configuration.</td>
+                <td>
+                  An Ansible control node is not the same concept as a Swarm manager, even when one machine performs
+                  both roles.
+                </td>
+              </tr>
+              <tr>
+                <td>Swarm manager and application-state host</td>
+                <td>Maintains Swarm state; pins PostgreSQL, Redis, canonical snapshots, API, and publishing services.</td>
+                <td>The first version intentionally uses one manager and is therefore not control-plane high availability.</td>
+              </tr>
+              <tr>
+                <td>Four Raspberry Pi 3B+ workers</td>
+                <td>Run bounded, independent worker jobs against versioned read-only graph snapshots.</td>
+                <td>
+                  All four should use a 64-bit lightweight OS so production images can target
+                  <code>linux/arm64</code>.
+                </td>
+              </tr>
+              <tr>
+                <td>Optional workstation-class build node</td>
+                <td>Accelerates full ingest, compaction, image development, and expensive analysis.</td>
+                <td>It may join for heavy work but is not required for public uptime.</td>
+              </tr>
+            </table>
+          </div>
+
+          <h2>3. Selected architecture—with explicit tradeoffs</h2>
+          <div class="decision-grid">
+            <section class="decision">
+              <span class="decision-tag selected">Selected</span>
+              <h3>Ansible + Docker Swarm</h3>
+              <p>Ansible configures hosts; Swarm places and reconciles containerized services across nodes.</p>
+              <p><strong>Tradeoff:</strong> simpler than a Kubernetes control plane, but less ecosystem depth and only one initial manager.</p>
+            </section>
+            <section class="decision">
+              <span class="decision-tag selected">Selected</span>
+              <h3>Redis + RQ for operational jobs</h3>
+              <p>Independent, retryable tasks such as scoring, validation, challenge generation, and path batches use RQ.</p>
+              <p><strong>Tradeoff:</strong> deliberately simpler than Celery or a coordinated Dask graph.</p>
+            </section>
+            <section class="decision">
+              <span class="decision-tag optional">Optional study</span>
+              <h3>Dask Distributed</h3>
+              <p>Dask is introduced later for a workload whose tasks have real dependencies or benefit from distributed collections and futures.</p>
+            </section>
+            <section class="decision">
+              <span class="decision-tag selected">Selected</span>
+              <h3>Parquet + DuckDB + PostgreSQL</h3>
+              <p>Parquet is the durable analytical layer, DuckDB transforms and validates it, and PostgreSQL stores mutable application state.</p>
+            </section>
+            <section class="decision">
+              <span class="decision-tag leading">Leading design</span>
+              <h3>Memory-mapped adjacency arrays</h3>
+              <p>Compact integer arrays are the current production direction, not a final commitment. They must beat simpler libraries on memory, speed, evidence lookup, and operational complexity.</p>
+            </section>
+            <section class="decision">
+              <span class="decision-tag selected">Selected</span>
+              <h3>Static-first public delivery</h3>
+              <p>The core public experience remains available independently of the home API. Live search degrades gracefully when unavailable.</p>
+            </section>
+          </div>
+
+          <h2>4. Data and graph flow</h2>
+          <div class="flow">
+            <div class="node">Catalog source snapshots</div>
+            <div class="node">Streaming Python parse</div>
+            <div class="node">Normalized Parquet</div>
+            <div class="node">DuckDB transforms</div>
+            <div class="node">Versioned graph snapshots</div>
+          </div>
+          <p>
+            The graph starts as a bipartite artist–release graph so every path can retain release-level evidence. An
+            artist-only projection may be derived for selected analyses, but it should not replace the evidence-bearing
+            source graph.
+          </p>
+
+          <h2>5. Stateful services and snapshot placement</h2>
+          <p>
+            Swarm schedules containers; it does not automatically turn local disks into distributed storage. PostgreSQL,
+            Redis, and canonical graph files are therefore constrained to the state host and backed up there. Workers
+            receive immutable, checksummed graph snapshots and must reject jobs that request a different snapshot version.
+          </p>
+          <div class="callout">
+            <strong>Recovery posture:</strong> with one manager, worker services may keep running after manager loss, but
+            cluster management requires recovery. The mitigation is documented state backup, reproducible Ansible
+            configuration, versioned data artifacts, and a public application that does not require the cluster.
+          </div>
+
+          <h2>6. Public and private data boundary</h2>
+          <div class="table">
+            <table>
+              <tr>
+                <th>Public</th>
+                <th>Private</th>
+              </tr>
+              <tr>
+                <td>
+                  Logical roles, tool choices, algorithms, aggregate findings, derived catalog paths, and the fact that
+                  four Raspberry Pi 3B+ workers participate.
+                </td>
+                <td>
+                  Collection membership, exact inventory, hostnames, addressing, switch/router models, port maps, mount
+                  paths, credentials, deployment commands, backups, and incident notes.
+                </td>
+              </tr>
+            </table>
+          </div>
+          <p>
+            Discogs catalog facts such as releases, artist names, and credits are identified as CC0 data in the API terms,
+            while collection membership and other user-associated data are restricted. The collection is therefore a
+            private seed; public outputs should use derived catalog facts and should follow applicable notices and linking
+            requirements.
+          </p>
+
+          <h2>7. Alternatives considered</h2>
+          <div class="table">
+            <table>
+              <tr>
+                <th>Decision</th>
+                <th>Selected</th>
+                <th>Why not the main alternatives?</th>
+              </tr>
+              <tr>
+                <td>Multi-node services</td>
+                <td>Docker Swarm</td>
+                <td>Compose is single-host; K3s adds valuable Kubernetes learning but more control-plane concepts and overhead than this first build needs.</td>
+              </tr>
+              <tr>
+                <td>Background work</td>
+                <td>RQ</td>
+                <td>Celery is more feature-rich but heavier; Dask is better when tasks form a dependency graph rather than a queue of mostly independent jobs.</td>
+              </tr>
+              <tr>
+                <td>Analytical storage</td>
+                <td>Parquet + DuckDB</td>
+                <td>Putting all normalized credits in PostgreSQL would work, but makes immutable analytical snapshots and broad scans less portable.</td>
+              </tr>
+              <tr>
+                <td>Graph execution</td>
+                <td>Benchmark-gated compact arrays</td>
+                <td>NetworkX is ideal for fixtures but object-heavy at scale; a graph database adds a server and query model before measurements show it is needed.</td>
+              </tr>
+              <tr>
+                <td>Public availability</td>
+                <td>Static first</td>
+                <td>A live-only application would make home connectivity, maintenance, and power part of the public reliability contract.</td>
+              </tr>
+            </table>
+          </div>
+
+          <h2>8. Implementation phases</h2>
+          <div class="table">
+            <table>
+              <tr>
+                <th>Phase</th>
+                <th>Exit condition</th>
+              </tr>
+              <tr><td>Baseline</td><td>64-bit Pi OS, repeatable Ansible bootstrap, wired connectivity, storage, and recovery notes.</td></tr>
+              <tr><td>Swarm skeleton</td><td>One multi-architecture service runs successfully on every worker, and manager-state backup is tested.</td></tr>
+              <tr><td>Collection slice</td><td>Private collection seed plus one-hop catalog expansion produces a manually verified evidence path.</td></tr>
+              <tr><td>Durable contracts</td><td>Parquet schema, role taxonomy, stable IDs, manifests, provenance, and PostgreSQL search are versioned.</td></tr>
+              <tr><td>Medium graph</td><td>RQ batches, snapshot distribution, challenge generation, and performance measurements work repeatedly.</td></tr>
+              <tr><td>Graph benchmark gate</td><td>NetworkX fixtures validate results; compact arrays are compared with at least one optimized graph library before final selection.</td></tr>
+              <tr><td>Full scale</td><td>Full-catalog ingest, compact publication, rollback, and reproducible rebuild complete within acceptable resource limits.</td></tr>
+              <tr><td>Static release</td><td>Daily challenge and findings remain useful with the home API disabled.</td></tr>
+              <tr><td>Live search</td><td>Arbitrary paths are bounded, cached, evidence-backed, observable, and resilient to service unavailability.</td></tr>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section id="concepts" class="view" role="tabpanel" aria-labelledby="tab-concepts" hidden>
+        <article class="card guide">
+          <h1>Underlying concepts and tools</h1>
+          <p class="intro">These explanations describe the technologies themselves. Each section then shows how the idea applies to this build.</p>
+
+          <h2>1. Configuration management: Ansible</h2>
+          <p>Ansible is an agentless automation system that applies a declared configuration from a <strong>control node</strong> to <strong>managed nodes</strong> listed in an inventory. Playbooks describe tasks and desired outcomes. A well-designed task is <strong>idempotent</strong>: running it again should leave an already-correct system unchanged.</p>
+          <div class="applied"><strong>Applied here:</strong> install Docker, create users and directories, configure services, and verify the four Pi workers from one infrastructure control host.</div>
+          <p class="sources"><a href="https://docs.ansible.com/projects/ansible/latest/getting_started/index.html" target="_blank" rel="noopener">Official Ansible getting-started guide</a></p>
+
+          <h2>2. Containers, images, and multi-platform builds</h2>
+          <p>A container is an isolated process created from an image. An image packages the filesystem and metadata required to run an application. Different CPU architectures need compatible image variants; a multi-platform image manifest lets one tag resolve to an AMD64 or ARM64 image as appropriate.</p>
+          <div class="applied"><strong>Applied here:</strong> GitHub Actions and Docker Buildx publish both <code>linux/amd64</code> and <code>linux/arm64</code> variants. The Pi 3B+ nodes therefore need a 64-bit OS.</div>
+          <div class="exercise"><strong>Exercise:</strong> inspect a public image with <code>docker buildx imagetools inspect IMAGE</code> and identify its supported platforms.</div>
+          <p class="sources"><a href="https://docs.docker.com/build/building/multi-platform/" target="_blank" rel="noopener">Docker multi-platform builds</a> · <a href="https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry" target="_blank" rel="noopener">GitHub Container Registry</a></p>
+
+          <h2>3. Orchestration: Docker Swarm</h2>
+          <p>Docker Swarm is Docker Engine’s built-in orchestration mode. A swarm contains manager and worker nodes. You declare a <strong>service</strong> as desired state; managers schedule <strong>tasks</strong> on nodes and reconcile the actual state toward that declaration. Managers maintain cluster state through Raft consensus.</p>
+          <div class="applied"><strong>Applied here:</strong> one manager schedules API and worker services. A single manager is intentionally simple but not highly available; running tasks can continue after manager failure, while cluster management requires recovery.</div>
+          <div class="exercise"><strong>Exercise:</strong><pre>docker swarm init
+docker service create --name lab-hello --replicas 2 nginx:alpine
+docker service ps lab-hello</pre>Observe the difference between the service declaration and the individual tasks placed on nodes.</div>
+          <p class="sources"><a href="https://docs.docker.com/engine/swarm/key-concepts/" target="_blank" rel="noopener">Swarm key concepts</a> · <a href="https://docs.docker.com/engine/swarm/how-swarm-mode-works/nodes/" target="_blank" rel="noopener">Manager and worker nodes</a></p>
+
+          <h2>4. Queues and distributed task graphs: RQ versus Dask</h2>
+          <p>RQ is a Python background-job queue backed by Redis or Valkey. Producers enqueue callable work; workers reserve jobs, execute them, and record status or failure. Dask instead represents computations as task graphs and can manage dependencies, futures, distributed collections, data movement, and coordinated execution.</p>
+          <div class="table"><table><tr><th>Question</th><th>RQ</th><th>Dask</th></tr><tr><td>Primary abstraction</td><td>Queued job</td><td>Task graph, future, array, dataframe, or bag</td></tr><tr><td>Best fit</td><td>Independent or loosely coupled background work</td><td>Dependent computations and parallel analytical workflows</td></tr><tr><td>Project role</td><td>Default operational queue</td><td>Optional advanced experiment after a suitable workload appears</td></tr></table></div>
+          <div class="exercise"><strong>Exercise:</strong><pre>from redis import Redis
+from rq import Queue
+
+queue = Queue(connection=Redis())
+job = queue.enqueue(sum, [1, 2, 3])
+print(job.id)</pre>Run an <code>rq worker</code> process and observe the job lifecycle.</div>
+          <p class="sources"><a href="https://python-rq.org/docs/" target="_blank" rel="noopener">RQ documentation</a> · <a href="https://docs.dask.org/en/stable/futures.html" target="_blank" rel="noopener">Dask futures</a> · <a href="https://docs.dask.org/en/stable/spec.html" target="_blank" rel="noopener">Dask task-graph specification</a></p>
+
+          <h2>5. Analytical files and databases</h2>
+          <p><strong>Parquet</strong> is a column-oriented file format designed for efficient analytical storage and selective reads. <strong>DuckDB</strong> is an embedded analytical SQL engine that can query Parquet directly. <strong>PostgreSQL</strong> is a server database designed for durable, concurrent, transactional state.</p>
+          <div class="applied"><strong>Applied here:</strong> normalized catalog credits live in versioned Parquet; DuckDB performs broad transformations and validation; PostgreSQL stores mutable search indexes, challenges, caches, and snapshot registry records.</div>
+          <div class="exercise"><strong>Exercise:</strong><pre>SELECT role, count(*) AS credit_count
+FROM read_parquet('credits/*.parquet')
+GROUP BY role
+ORDER BY credit_count DESC;</pre>Explain why this broad aggregation fits DuckDB better than a request-time API transaction.</div>
+          <p class="sources"><a href="https://parquet.apache.org/docs/overview/" target="_blank" rel="noopener">Apache Parquet overview</a> · <a href="https://duckdb.org/docs/stable/data/parquet/overview" target="_blank" rel="noopener">DuckDB and Parquet</a> · <a href="https://www.postgresql.org/docs/current/tutorial-arch.html" target="_blank" rel="noopener">PostgreSQL architecture</a></p>
+
+          <h2>6. Graph models and shortest paths</h2>
+          <p>A graph contains nodes and edges. A <strong>bipartite graph</strong> has two node sets, with edges only between sets. Here those sets are artists and releases. In an unweighted graph, breadth-first search finds a path with the fewest edges in <code>O(V + E)</code> time. An artist-only projection can simplify analysis, but may obscure the release evidence that justifies each connection.</p>
+          <div class="applied"><strong>Applied here:</strong> preserve artist → release → artist paths as the evidence-bearing model. Use NetworkX on small fixtures as a readable correctness oracle.</div>
+          <div class="exercise"><strong>Exercise:</strong><pre>import networkx as nx
+
+G = nx.Graph()
+G.add_nodes_from(['artist:a', 'artist:b'], bipartite='artist')
+G.add_node('release:1', bipartite='release')
+G.add_edges_from([
+    ('artist:a', 'release:1'),
+    ('release:1', 'artist:b'),
+])
+print(nx.shortest_path(G, 'artist:a', 'artist:b'))</pre>Confirm that the path retains its release-level evidence.</div>
+          <p class="sources"><a href="https://networkx.org/documentation/stable/reference/algorithms/bipartite.html" target="_blank" rel="noopener">NetworkX bipartite algorithms</a> · <a href="https://networkx.org/documentation/stable/reference/algorithms/shortest_paths.html" target="_blank" rel="noopener">NetworkX shortest paths</a></p>
+
+          <h2>7. Compact adjacency arrays and memory mapping</h2>
+          <p>An adjacency list stores the neighbors of each node. A compact CSR-like representation can store all neighbors in one integer array plus an offsets array that marks where each node’s neighbors begin and end. Memory mapping lets the operating system page portions of a file-backed array into memory as needed rather than reading the entire file at startup.</p>
+          <div class="applied"><strong>Applied here:</strong> memory-mapped arrays are the leading production design because the Pi workers have limited memory. This remains benchmark-gated: evidence lookup, build complexity, snapshot portability, and speed matter as much as raw traversal throughput.</div>
+          <p class="sources"><a href="https://numpy.org/doc/stable/reference/generated/numpy.memmap.html" target="_blank" rel="noopener">NumPy memory mapping</a></p>
+
+          <h2>8. APIs, static-first delivery, and network boundaries</h2>
+          <p>FastAPI builds typed HTTP APIs; Pydantic validates and serializes data against declared models. A static-first application publishes its essential HTML, JavaScript, and data artifacts ahead of time, so basic use does not depend on a live origin service. Cloudflare Tunnel can publish a bounded service over outbound connections, while Tailscale provides a private administrative network.</p>
+          <div class="applied"><strong>Applied here:</strong> curated challenges remain static. A later FastAPI endpoint handles bounded live search. Cloudflare carries public API traffic; Tailscale remains the administrative path.</div>
+          <p class="sources"><a href="https://fastapi.tiangolo.com/" target="_blank" rel="noopener">FastAPI</a> · <a href="https://docs.pydantic.dev/latest/" target="_blank" rel="noopener">Pydantic</a> · <a href="https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/" target="_blank" rel="noopener">Cloudflare Tunnel</a> · <a href="https://tailscale.com/kb/1017/install" target="_blank" rel="noopener">Tailscale</a></p>
+
+          <h2>9. Testing, provenance, and observability</h2>
+          <p>Unit tests verify small transformations and graph rules. Integration tests exercise queues, databases, and services. Browser tests validate the public experience. Provenance records which source snapshot, parser version, role rules, and graph version produced a result. Observability exposes health, logs, queue depth, latency, and active snapshot identity.</p>
+          <div class="applied"><strong>Applied here:</strong> every accepted path must be reproducible from a versioned snapshot and ruleset; a pretty path without evidence and provenance is not a valid result.</div>
+          <p class="sources"><a href="https://docs.pytest.org/en/stable/" target="_blank" rel="noopener">pytest</a> · <a href="https://playwright.dev/docs/intro" target="_blank" rel="noopener">Playwright</a> · <a href="https://docs.astral.sh/ruff/" target="_blank" rel="noopener">Ruff</a> · <a href="https://mypy.readthedocs.io/en/stable/" target="_blank" rel="noopener">mypy</a></p>
+
+          <h2>10. Data rights and responsible publication</h2>
+          <p>Technical availability is not the same as permission to republish. Discogs identifies core catalog fields—including releases, artists, and credits—as CC0 data, while collection, wantlist, marketplace, and user-associated information are restricted. API use also carries notice, linking, freshness, and other contractual requirements.</p>
+          <div class="applied"><strong>Applied here:</strong> keep collection membership private, avoid treating album art as a launch dependency, publish derived catalog paths thoughtfully, and review the current terms before choosing between API-derived and dump-derived production workflows.</div>
+          <p class="sources"><a href="https://support.discogs.com/hc/en-us/articles/360009334593-API-Terms-of-Use" target="_blank" rel="noopener">Discogs API Terms of Use</a></p>
+        </article>
+      </section>
+
+      <section id="quiz" class="view" role="tabpanel" aria-labelledby="tab-quiz" hidden>
+        <section class="toolbar" aria-label="Quiz controls">
+          <div class="control"><label for="track">Track</label><select id="track"><option value="mixed">Mixed review</option><option value="concept">Technology concepts</option><option value="build">Build decisions</option></select></div>
+          <div class="control"><label for="mode">Mode</label><select id="mode"><option value="all">Full review</option><option value="quick">Quick 10</option><option value="weak">Weak areas</option></select></div>
+          <div class="control"><label for="cat">Category</label><select id="cat"><option>All</option></select></div>
+          <div class="control"><span class="control-label">Session</span><button id="start">Start new session</button></div>
+        </section>
+        <div class="dash">
+          <main class="card quiz" id="qbox" aria-live="polite"></main>
+          <aside class="card side">
+            <h2>Mastery</h2>
+            <div class="stats"><div class="stat">Answered<strong id="n">0</strong></div><div class="stat">Accuracy<strong id="acc">—</strong></div></div>
+            <div class="stats track-stats"><div class="stat">Concepts<strong id="conceptAcc">—</strong></div><div class="stat">Build decisions<strong id="buildAcc">—</strong></div></div>
+            <div class="bars" id="bars"></div>
+            <p class="small">Concept questions test transferable knowledge. Build questions test this project’s selected tradeoffs and constraints.</p>
+            <div class="actions"><button id="reset">Reset progress</button></div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="flash" class="view" role="tabpanel" aria-labelledby="tab-flash" hidden>
+        <div class="flash-controls control"><label for="deck">Deck</label><select id="deck"><option value="concept">Technology concepts</option><option value="build">Build decisions</option><option value="mixed">Mixed deck</option></select></div>
+        <div class="card flash"><div><span class="card-kind" id="cardKind"></span><h2 id="front"></h2><div class="answer" id="back"></div><p class="card-source" id="cardSource"></p><div class="actions"><button class="primary" id="reveal" aria-expanded="false" aria-controls="back">Reveal</button><button id="nextCard">Next</button></div><p class="small" id="count"></p></div></div>
+      </section>
+
+      <section id="references" class="view" role="tabpanel" aria-labelledby="tab-references" hidden>
+        <article class="card guide">
+          <h1>Primary references</h1>
+          <p class="intro">These links favor official project documentation and current terms. External references require a network connection even when the study lab itself is opened from the offline HTML download.</p>
+          <div class="reference-grid">
+            <section><h2>Infrastructure</h2><ul><li><a href="https://docs.ansible.com/projects/ansible/latest/getting_started/index.html" target="_blank" rel="noopener">Ansible getting started</a></li><li><a href="https://docs.docker.com/engine/swarm/key-concepts/" target="_blank" rel="noopener">Docker Swarm key concepts</a></li><li><a href="https://docs.docker.com/engine/swarm/how-swarm-mode-works/nodes/" target="_blank" rel="noopener">How Swarm nodes work</a></li><li><a href="https://docs.docker.com/engine/storage/volumes/" target="_blank" rel="noopener">Docker volumes</a></li><li><a href="https://docs.docker.com/build/building/multi-platform/" target="_blank" rel="noopener">Docker multi-platform builds</a></li><li><a href="https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry" target="_blank" rel="noopener">GitHub Container Registry</a></li></ul></section>
+            <section><h2>Distributed Python</h2><ul><li><a href="https://python-rq.org/docs/" target="_blank" rel="noopener">RQ documentation</a></li><li><a href="https://docs.dask.org/en/stable/futures.html" target="_blank" rel="noopener">Dask futures</a></li><li><a href="https://docs.dask.org/en/stable/spec.html" target="_blank" rel="noopener">Dask graph specification</a></li></ul></section>
+            <section><h2>Data systems</h2><ul><li><a href="https://parquet.apache.org/docs/overview/" target="_blank" rel="noopener">Apache Parquet</a></li><li><a href="https://duckdb.org/docs/stable/data/parquet/overview" target="_blank" rel="noopener">DuckDB Parquet overview</a></li><li><a href="https://www.postgresql.org/docs/current/tutorial-arch.html" target="_blank" rel="noopener">PostgreSQL architecture</a></li></ul></section>
+            <section><h2>Graphs and arrays</h2><ul><li><a href="https://networkx.org/documentation/stable/reference/algorithms/bipartite.html" target="_blank" rel="noopener">NetworkX bipartite graphs</a></li><li><a href="https://networkx.org/documentation/stable/reference/algorithms/shortest_paths.html" target="_blank" rel="noopener">NetworkX shortest paths</a></li><li><a href="https://numpy.org/doc/stable/reference/generated/numpy.memmap.html" target="_blank" rel="noopener">NumPy memmap</a></li></ul></section>
+            <section><h2>Application delivery</h2><ul><li><a href="https://fastapi.tiangolo.com/" target="_blank" rel="noopener">FastAPI</a></li><li><a href="https://docs.pydantic.dev/latest/" target="_blank" rel="noopener">Pydantic</a></li><li><a href="https://docs.astro.build/en/concepts/islands/" target="_blank" rel="noopener">Astro islands</a></li><li><a href="https://svelte.dev/docs/svelte/overview" target="_blank" rel="noopener">Svelte overview</a></li><li><a href="https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/" target="_blank" rel="noopener">Cloudflare Tunnel</a></li><li><a href="https://tailscale.com/kb/1017/install" target="_blank" rel="noopener">Tailscale installation</a></li></ul></section>
+            <section><h2>Quality and data use</h2><ul><li><a href="https://docs.pytest.org/en/stable/" target="_blank" rel="noopener">pytest</a></li><li><a href="https://playwright.dev/docs/intro" target="_blank" rel="noopener">Playwright</a></li><li><a href="https://docs.astral.sh/ruff/" target="_blank" rel="noopener">Ruff</a></li><li><a href="https://mypy.readthedocs.io/en/stable/" target="_blank" rel="noopener">mypy</a></li><li><a href="https://support.discogs.com/hc/en-us/articles/360009334593-API-Terms-of-Use" target="_blank" rel="noopener">Discogs API Terms of Use</a></li></ul></section>
+          </div>
+        </article>
+      </section>
+    </div>
+    <script src="./study-data.js"></script>
+    <script src="./study.js"></script>
+  </body>
+</html>
