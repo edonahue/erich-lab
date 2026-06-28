@@ -1,0 +1,41 @@
+name: Check external links
+
+on:
+  schedule:
+    - cron: '17 13 1 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: external-link-check
+  cancel-in-progress: true
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Check external references
+        id: links
+        continue-on-error: true
+        env:
+          LINK_REPORT: link-report.md
+        run: node scripts/check-links.mjs
+      - name: Report failures
+        if: steps.links.outcome == 'failure'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          LINK_REPORT: link-report.md
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: node scripts/report-link-failure.mjs
+      - name: Mark workflow failed
+        if: steps.links.outcome == 'failure'
+        run: exit 1
