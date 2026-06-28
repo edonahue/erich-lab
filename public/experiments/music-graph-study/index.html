@@ -22,20 +22,16 @@
       --bg: #111820;
       --surface: #18232c;
       --ink: #eef2ef;
-      --muted: #a9b5bb;
       --line: rgba(238, 242, 239, .16);
-      --accent: #72a4b9;
-      --warm: #cf7a4c;
+      --accent: #cf7a4c;
     }
     :root[data-theme="light"] {
       color-scheme: light;
       --bg: #f3f0e7;
       --surface: #fffdf7;
       --ink: #17242b;
-      --muted: #647077;
       --line: #d8d2c4;
       --accent: #2f6077;
-      --warm: #a65d35;
     }
     * { box-sizing: border-box; }
     html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
@@ -75,11 +71,11 @@
       width: 18px;
       height: 18px;
       border-radius: 999px;
-      background: var(--warm);
+      background: var(--accent);
       box-shadow: inset -4px -3px 0 rgba(0, 0, 0, .18);
-      transition: transform 180ms ease, background-color 180ms ease;
+      transition: transform 180ms ease;
     }
-    .theme-toggle[aria-pressed="true"] span { transform: translateX(16px); background: var(--accent); }
+    .theme-toggle[aria-pressed="true"] span { transform: translateX(16px); }
     iframe { display: block; width: 100%; height: 100%; border: 0; background: var(--bg); }
     @media (max-width: 620px) {
       nav div a:first-child { display: none; }
@@ -107,77 +103,10 @@
       const toggle = document.querySelector('[data-theme-toggle]');
       const frame = document.querySelector('[data-study-frame]');
       const meta = document.querySelector('[data-theme-color]');
-      const bridgeCss = `
-        :root {
-          color-scheme: dark;
-          --bg: #111820;
-          --panel: #18232c;
-          --ink: #eef2ef;
-          --muted: #a9b5bb;
-          --line: rgba(238, 242, 239, .16);
-          --accent: #72a4b9;
-          --accent2: #cf7a4c;
-          --good: #7fc59a;
-          --bad: #e28b8b;
-          --soft: #22313b;
-          --control: #1d2a34;
-          --selected: #203746;
-          --good-soft: #173226;
-          --good-line: #47785a;
-          --bad-soft: #3a2023;
-          --bad-line: #8a4d53;
-          --code-bg: #0b1117;
-          --code-ink: #eef2ef;
-          --card-shadow: 0 12px 34px rgba(0, 0, 0, .28);
-        }
-        :root[data-theme="light"] {
-          color-scheme: light;
-          --bg: #f4f1e8;
-          --panel: #fffdf7;
-          --ink: #1d2730;
-          --muted: #68727b;
-          --line: #d7d1c5;
-          --accent: #315c74;
-          --accent2: #9c5b31;
-          --good: #2f6e49;
-          --bad: #9a3f3f;
-          --soft: #ece7db;
-          --control: #ffffff;
-          --selected: #eef5f7;
-          --good-soft: #edf6ef;
-          --good-line: #a9ccb5;
-          --bad-soft: #faeeee;
-          --bad-line: #ddb5b5;
-          --code-bg: #1f2930;
-          --code-ink: #f2f4ef;
-          --card-shadow: 0 8px 28px rgba(30, 40, 45, .06);
-        }
-        body { background: var(--bg) !important; color: var(--ink) !important; }
-        .card, .control, .badge, .topnav { background: var(--panel) !important; border-color: var(--line) !important; box-shadow: var(--card-shadow) !important; }
-        .control select, .control button, .choice, .actions button, .guide-nav input { background: var(--control) !important; color: var(--ink) !important; border-color: var(--line) !important; }
-        .control button, .actions .primary { background: var(--accent) !important; color: #081319 !important; border-color: var(--accent) !important; }
-        :root[data-theme="light"] .control button,
-        :root[data-theme="light"] .actions .primary { color: #ffffff !important; }
-        .choice.selected, .guide-callout { background: var(--selected) !important; }
-        .choice.correct, .feedback.good { background: var(--good-soft) !important; border-color: var(--good-line) !important; }
-        .choice.incorrect, .feedback.bad { background: var(--bad-soft) !important; border-color: var(--bad-line) !important; }
-        .stat, .flash .back, .progress, .bar { background: var(--soft) !important; }
-        .topnav button.active { background: var(--control) !important; color: var(--ink) !important; }
-        .guide-content table, .guide-figure img { background: #fffdf7 !important; color: #1d2730 !important; }
-        .guide-content pre { background: var(--code-bg) !important; color: var(--code-ink) !important; }
-      `;
 
       const syncFrame = (theme) => {
         const doc = frame?.contentDocument;
-        if (!doc) return;
-        doc.documentElement.dataset.theme = theme;
-        let style = doc.getElementById('erich-lab-theme-bridge');
-        if (!style) {
-          style = doc.createElement('style');
-          style.id = 'erich-lab-theme-bridge';
-          style.textContent = bridgeCss;
-          doc.head.append(style);
-        }
+        if (doc) doc.documentElement.dataset.theme = theme;
       };
 
       const apply = (theme, persist = false) => {
@@ -191,9 +120,7 @@
         syncFrame(next);
       };
 
-      toggle?.addEventListener('click', () => {
-        apply(root.dataset.theme === 'light' ? 'dark' : 'light', true);
-      });
+      toggle?.addEventListener('click', () => apply(root.dataset.theme === 'light' ? 'dark' : 'light', true));
       frame?.addEventListener('load', () => syncFrame(root.dataset.theme));
       window.addEventListener('storage', (event) => {
         if (event.key === key) apply(event.newValue, false);

@@ -4,7 +4,7 @@ A low-ceremony public shelf for small tools, studies, data experiments, and prot
 
 ## Current experiment
 
-- **Music-Credit Graph Study Lab** — an adaptive architecture quiz with its full study guide embedded in one portable HTML file.
+- **Music-Credit Graph Study Lab** — an adaptive architecture guide and quiz for a collection-seeded graph built with Python, Docker Swarm, columnar data, compact graph snapshots, and a static-first public game.
 
 ## Run locally
 
@@ -100,6 +100,7 @@ The division is intentional: the main website curates project narratives and cas
 - GitHub is the source of truth.
 - Pages CMS is the editorial interface, not a separate database.
 - Cloudflare serves the Astro output and future edge APIs.
-- The x600 is a development and build machine, not a required public host.
-- The ZimaBoard can later provide APIs for experiments that genuinely need a home backend.
+- A workstation-class development and build machine is not a required public host.
+- A local control node can later provide bounded APIs for experiments that genuinely need a home backend.
+- Public project pages describe roles and data flow; exact home infrastructure and operational runbooks stay private.
 - Small standalone HTML builds remain first-class projects.
