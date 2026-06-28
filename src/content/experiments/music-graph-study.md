@@ -1,7 +1,8 @@
 ---
+slug: music-graph-study
 title: Music-Credit Graph Study Lab
 summary: An adaptive quiz and embedded architecture guide for a distributed music-credit graph project.
-status: Working prototype
+status: Prototype
 kind: Study tool
 technologies:
   - HTML
@@ -10,6 +11,7 @@ technologies:
   - localStorage
 launchPath: /experiments/music-graph-study/
 sourceUrl: https://github.com/edonahue/erich-lab/tree/main/public/experiments/music-graph-study
+published: true
 featured: true
 created: 2026-06-27
 updated: 2026-06-27
