@@ -117,20 +117,11 @@ async function buildOffline(manifest, directory) {
     html = html.replace(pattern, `<style>\n${source}\n</style>`);
   }
 
-  const inlineScripts = [];
-  let scriptPlaceholderAdded = false;
   for (const script of [...new Set(scripts)]) {
     const source = await readFile(path.join(directory, script), 'utf8');
     const pattern = new RegExp(`<script\\s+src=["']\\./${escapeRegExp(script)}["']\\s*><\\/script>`);
     if (!pattern.test(html)) throw new Error(`${manifest.slug}: script marker not found for ${script}`);
-    html = html.replace(pattern, scriptPlaceholderAdded ? '' : '<!-- EXPERIMENT_INLINE_SCRIPTS -->');
-    scriptPlaceholderAdded = true;
-    inlineScripts.push(`// ${script}\n${source}`);
-  }
-
-  if (inlineScripts.length) {
-    const combined = `<script type="module">\n{\n${safeScript(inlineScripts.join('\n\n'))}\n}\n</script>`;
-    html = html.replace('<!-- EXPERIMENT_INLINE_SCRIPTS -->', combined);
+    html = html.replace(pattern, `<script>\n${safeScript(source)}\n</script>`);
   }
 
   const themeBootstrap = `<script>(()=>{const key="erich-lab-theme";let theme="dark";try{theme=localStorage.getItem(key)==="light"?"light":"dark"}catch{}document.documentElement.dataset.theme=theme;})();</script>`;
