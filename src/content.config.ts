@@ -4,13 +4,15 @@ import { glob } from 'astro/loaders';
 const experiments = defineCollection({
   loader: glob({ base: './src/content/experiments', pattern: '**/*.{md,mdx}' }),
   schema: z.object({
+    slug: z.string().regex(/^[a-z0-9-]+$/),
     title: z.string(),
     summary: z.string(),
-    status: z.string(),
+    status: z.enum(['Idea', 'Prototype', 'Active', 'Paused', 'Archived']),
     kind: z.string(),
     technologies: z.array(z.string()).default([]),
     launchPath: z.string(),
     sourceUrl: z.string().url(),
+    published: z.boolean().default(false),
     featured: z.boolean().default(false),
     created: z.coerce.date(),
     updated: z.coerce.date(),
