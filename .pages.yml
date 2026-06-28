@@ -73,6 +73,32 @@ content:
           path: experiments
           extensions: [svg, png, jpg, jpeg, webp]
           rename: safe
+      - name: offline
+        label: Offline downloads
+        type: object
+        fields:
+          - name: status
+            label: Offline support
+            type: select
+            required: true
+            options:
+              values: [full, limited]
+          - { name: note, label: Offline note, type: text }
+          - name: formats
+            label: Download formats
+            type: object
+            list: true
+            fields:
+              - name: type
+                label: Format
+                type: select
+                required: true
+                options:
+                  values: [html, zip, pdf]
+              - { name: label, label: Button label, type: string, required: true }
+              - { name: href, label: Public download path, type: string, required: true }
+              - { name: filename, label: Download filename, type: string }
+              - { name: note, label: Format note, type: text }
       - name: body
         label: Project notes
         type: rich-text
