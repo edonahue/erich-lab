@@ -17,13 +17,17 @@ interface Props {
 
 const { offline } = Astro.props;
 ---
-{offline && offline.formats.map((format) => (
-  <a
-    class="button"
-    href={format.href}
-    download={format.filename || true}
-    title={format.note || offline.note || undefined}
-  >
-    {format.label}
-  </a>
-))}
+{offline && (
+  <div class="download-actions">
+    {offline.formats.map((format) => (
+      <a
+        class:list={['button', 'download-button', `download-button--${offline.status}`]}
+        href={format.href}
+        download={format.filename || true}
+        title={format.note || offline.note || undefined}
+      >
+        {format.label}
+      </a>
+    ))}
+  </div>
+)}
