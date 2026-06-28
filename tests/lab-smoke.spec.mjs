@@ -36,10 +36,20 @@ test('catalog, project notes, wrapper, and offline edition stay connected', asyn
   await expect(reveal).toHaveAttribute('aria-expanded', 'true');
   await expect(reveal).toHaveText('Hide');
 
+  const offlineErrors = [];
+  page.on('pageerror', (error) => offlineErrors.push(error.message));
   await page.goto('/downloads/music-graph-study.html');
   await expect(page.getByText('Offline copy · Music-Credit Graph Study Lab')).toBeVisible();
-  await page.getByRole('tab', { name: 'References' }).click();
-  await expect(page.getByRole('heading', { name: 'Primary references' })).toBeVisible();
+  expect(offlineErrors).toEqual([]);
+  const referencesTab = page.getByRole('tab', { name: 'References' });
+  await referencesTab.click();
+  const offlineState = await page.evaluate(() => ({
+    selected: document.querySelector('#tab-references')?.getAttribute('aria-selected'),
+    hidden: document.querySelector('#references')?.hidden,
+    panelClass: document.querySelector('#references')?.className,
+  }));
+  expect(offlineState).toEqual({ selected: 'true', hidden: false, panelClass: 'view on' });
+  await expect(page.locator('#references h1')).toHaveText('Primary references');
 });
 
 test('legacy entry redirects and sitemap lists public landing pages', async ({ page, request }) => {
