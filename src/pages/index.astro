@@ -1,28 +1,29 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import site from '../data/site.json';
 
-const experiments = (await getCollection('experiments')).sort((a, b) => {
+const experiments = (await getCollection('experiments', ({ data }) => data.published)).sort((a, b) => {
   if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
   return b.data.updated.getTime() - a.data.updated.getTime();
 });
 ---
 <BaseLayout>
   <section class="hero shell">
-    <p class="eyebrow">Workbench · studies · small builds</p>
-    <h1>A public shelf for ideas that are useful before they are finished.</h1>
-    <p class="lede">Small tools, learning artifacts, data experiments, and prototypes. Each build can stay lightweight, graduate into a larger project, or simply remain an interesting working object.</p>
+    <p class="eyebrow">{site.eyebrow}</p>
+    <h1>{site.headline}</h1>
+    <p class="lede">{site.introduction}</p>
     <div class="hero-actions">
       <a class="button primary" href="#experiments">Browse experiments</a>
-      <a class="button" href="https://github.com/edonahue/erich-lab">View the repository</a>
+      <a class="button" href={site.repositoryUrl}>View the repository</a>
     </div>
   </section>
 
   <section class="catalog shell" id="experiments" aria-labelledby="experiments-title">
     <div class="section-heading">
       <div>
-        <p class="eyebrow">Current work</p>
-        <h2 id="experiments-title">Experiments</h2>
+        <p class="eyebrow">{site.experimentsEyebrow}</p>
+        <h2 id="experiments-title">{site.experimentsHeading}</h2>
       </div>
       <p>{experiments.length} on the shelf</p>
     </div>
@@ -39,7 +40,7 @@ const experiments = (await getCollection('experiments')).sort((a, b) => {
           </div>
           <div class="card-actions">
             <a class="button primary" href={experiment.data.launchPath}>Launch</a>
-            <a class="text-link" href={`/projects/${experiment.id}/`}>Read notes</a>
+            <a class="text-link" href={`/projects/${experiment.data.slug}/`}>Read notes</a>
             <a class="text-link" href={experiment.data.sourceUrl}>Source</a>
           </div>
         </article>
@@ -49,13 +50,17 @@ const experiments = (await getCollection('experiments')).sort((a, b) => {
 
   <section class="principles shell" id="about" aria-labelledby="about-title">
     <div>
-      <p class="eyebrow">How the lab works</p>
-      <h2 id="about-title">Low ceremony, durable ownership.</h2>
+      <p class="eyebrow">{site.principlesEyebrow}</p>
+      <h2 id="about-title">{site.principlesHeading}</h2>
     </div>
     <div class="principle-grid">
-      <article><span class="principle-number">01</span><h3>Small is valid</h3><p>A single useful HTML file belongs here just as much as a larger app.</p></article>
-      <article><span class="principle-number">02</span><h3>Content stays editable</h3><p>Pages CMS edits Markdown and media in GitHub while Astro turns them into the catalog.</p></article>
-      <article><span class="principle-number">03</span><h3>Promotion is optional</h3><p>A promising build can later move into its own repository without breaking its lab URL.</p></article>
+      {site.principles.map((principle, index) => (
+        <article>
+          <span class="principle-number">{String(index + 1).padStart(2, '0')}</span>
+          <h3>{principle.title}</h3>
+          <p>{principle.description}</p>
+        </article>
+      ))}
     </div>
   </section>
 </BaseLayout>
