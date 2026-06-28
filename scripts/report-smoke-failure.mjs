@@ -11,7 +11,7 @@ if (!token || !repository || !pullRequestNumber) {
 }
 
 const text = await readFile(logPath, 'utf8');
-const lines = text.split('\r?\n');
+const lines = text.split(/\r?\n/);
 const excerpt = lines.slice(-140).join('\n').slice(-20_000);
 const body = `### Browser smoke test failure\n\n\`\`\`text\n${excerpt}\n\`\`\``;
 const response = await fetch(`https://api.github.com/repos/${repository}/issues/${pullRequestNumber}/comments`, {
