@@ -27,6 +27,10 @@ function cleanUrl(value) {
   return value.replace(/[.,;:!?]+$/, '').replaceAll('&amp;', '&');
 }
 
+function isConcreteUrl(url) {
+  return !/[{}$]/.test(url);
+}
+
 async function checkUrl(url) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15_000);
@@ -62,6 +66,7 @@ for (const file of files) {
   const text = await readFile(file, 'utf8');
   for (const match of text.matchAll(urlPattern)) {
     const url = cleanUrl(match[0]);
+    if (!isConcreteUrl(url)) continue;
     if (!locations.has(url)) locations.set(url, new Set());
     locations.get(url).add(relative);
   }
