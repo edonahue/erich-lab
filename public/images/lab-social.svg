@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Erich's Lab</title>
+  <desc id="desc">A public shelf for small tools, studies, and experiments.</desc>
+  <rect width="1200" height="630" fill="#f3f0e7"/>
+  <rect x="72" y="72" width="1056" height="486" rx="36" fill="#17242b"/>
+  <rect x="116" y="116" width="92" height="92" rx="22" fill="#fffdf7"/>
+  <text x="162" y="174" text-anchor="middle" font-family="system-ui,sans-serif" font-size="28" font-weight="800" fill="#17242b">E/L</text>
+  <text x="116" y="292" font-family="Georgia,serif" font-size="76" fill="#fffdf7">Erich's Lab</text>
+  <text x="116" y="375" font-family="Georgia,serif" font-size="44" fill="#fffdf7">Small tools, studies, and working experiments.</text>
+  <line x1="116" y1="438" x2="1084" y2="438" stroke="#a65d35" stroke-width="6"/>
+  <text x="116" y="500" font-family="system-ui,sans-serif" font-size="26" fill="#d8d2c4">lab.erichdonahue.com</text>
+</svg>
