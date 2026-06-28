@@ -68,11 +68,27 @@ for (const file of files) {
   if (!status || !validStatuses.has(status)) fail(`${file}: invalid status ${status || '(missing)'}`);
 
   const experimentDir = path.join(publicDir, 'experiments', slug || filenameSlug);
-  if (!(await exists(path.join(experimentDir, 'index.html')))) fail(`${file}: missing public/experiments/${slug || filenameSlug}/index.html`);
+  const wrapperPath = path.join(experimentDir, 'index.html');
+  if (!(await exists(wrapperPath))) {
+    fail(`${file}: missing public/experiments/${slug || filenameSlug}/index.html`);
+  } else {
+    const wrapper = await readFile(wrapperPath, 'utf8');
+    for (const marker of ['erich-lab-theme', 'data-theme-toggle']) {
+      if (!wrapper.includes(marker)) fail(`${file}: experiment wrapper is missing universal theme marker ${marker}`);
+    }
+  }
+}
+
+const layoutPath = path.join(root, 'src', 'layouts', 'BaseLayout.astro');
+if (await exists(layoutPath)) {
+  const layout = await readFile(layoutPath, 'utf8');
+  for (const marker of ['erich-lab-theme', 'data-theme-toggle']) {
+    if (!layout.includes(marker)) fail(`BaseLayout.astro: missing universal theme marker ${marker}`);
+  }
 }
 
 for (const file of ['astro.config.mjs', 'src/content.config.ts', 'src/pages/index.astro', 'src/pages/404.astro', '.pages.yml', 'wrangler.jsonc', 'public/_headers']) {
   if (!(await exists(path.join(root, file)))) fail(`Missing ${file}`);
 }
 
-if (!process.exitCode) console.log(`✓ Validated ${files.length} Astro experiment content file(s), site settings, headers, and public launch routes.`);
+if (!process.exitCode) console.log(`✓ Validated ${files.length} Astro experiment content file(s), universal theme controls, site settings, headers, and public launch routes.`);
