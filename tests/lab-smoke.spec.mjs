@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test('catalog, project notes, wrapper, and offline edition stay connected', async ({ page }) => {
+test('catalog, project notes, and wrapper stay connected', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Experiments' })).toBeVisible();
   await expect(page.getByText('Works offline')).toBeVisible();
@@ -35,21 +35,27 @@ test('catalog, project notes, wrapper, and offline edition stay connected', asyn
   await reveal.click();
   await expect(reveal).toHaveAttribute('aria-expanded', 'true');
   await expect(reveal).toHaveText('Hide');
+});
 
-  const offlineErrors = [];
-  page.on('pageerror', (error) => offlineErrors.push(error.message));
+test('offline edition remains self-contained and interactive', async ({ page }) => {
+  const pageErrors = [];
+  page.on('pageerror', (error) => pageErrors.push(error.message));
+
   await page.goto('/downloads/music-graph-study.html');
   await expect(page.getByText('Offline copy · Music-Credit Graph Study Lab')).toBeVisible();
-  expect(offlineErrors).toEqual([]);
+  expect(pageErrors).toEqual([]);
+
   const referencesTab = page.getByRole('tab', { name: 'References' });
   await referencesTab.click();
-  const offlineState = await page.evaluate(() => ({
-    selected: document.querySelector('#tab-references')?.getAttribute('aria-selected'),
-    hidden: document.querySelector('#references')?.hidden,
-    panelClass: document.querySelector('#references')?.className,
-  }));
-  expect(offlineState).toEqual({ selected: 'true', hidden: false, panelClass: 'view on' });
+  await expect(referencesTab).toHaveAttribute('aria-selected', 'true');
+  await expect(page.locator('#references')).not.toHaveAttribute('hidden', '');
   await expect(page.locator('#references h1')).toHaveText('Primary references');
+
+  await page.getByRole('tab', { name: 'Quiz' }).click();
+  await page.locator('input[name="answer"]').first().check();
+  await page.getByRole('button', { name: 'Check' }).click();
+  await expect(page.getByRole('button', { name: 'Next' })).toBeEnabled();
+  expect(pageErrors).toEqual([]);
 });
 
 test('legacy entry redirects and sitemap lists public landing pages', async ({ page, request }) => {
