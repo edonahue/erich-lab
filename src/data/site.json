@@ -22,5 +22,6 @@
     }
   ],
   "mainSiteUrl": "https://erichdonahue.com",
-  "repositoryUrl": "https://github.com/edonahue/erich-lab"
+  "repositoryUrl": "https://github.com/edonahue/erich-lab",
+  "socialImage": "/images/lab-social.svg"
 }
