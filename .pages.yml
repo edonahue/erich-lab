@@ -11,73 +11,26 @@ content:
     path: src/data/site.json
     format: json
     fields:
-      - name: title
-        label: Site title
-        type: string
-        required: true
-
-      - name: eyebrow
-        label: Hero eyebrow
-        type: string
-        required: true
-
-      - name: headline
-        label: Hero headline
-        type: text
-        required: true
-
-      - name: introduction
-        label: Hero introduction
-        type: text
-        required: true
-
-      - name: experimentsEyebrow
-        label: Experiments eyebrow
-        type: string
-        required: true
-
-      - name: experimentsHeading
-        label: Experiments heading
-        type: string
-        required: true
-
-      - name: principlesEyebrow
-        label: Principles eyebrow
-        type: string
-        required: true
-
-      - name: principlesHeading
-        label: Principles heading
-        type: string
-        required: true
-
+      - { name: title, label: Site title, type: string, required: true }
+      - { name: eyebrow, label: Hero eyebrow, type: string, required: true }
+      - { name: headline, label: Hero headline, type: text, required: true }
+      - { name: introduction, label: Hero introduction, type: text, required: true }
+      - { name: experimentsEyebrow, label: Experiments eyebrow, type: string, required: true }
+      - { name: experimentsHeading, label: Experiments heading, type: string, required: true }
+      - { name: principlesEyebrow, label: Principles eyebrow, type: string, required: true }
+      - { name: principlesHeading, label: Principles heading, type: string, required: true }
       - name: principles
         label: Principles
         type: object
-        list:
-          min: 1
-          max: 6
-          collapsible:
-            collapsed: true
-            summary: "{title}"
+        list: true
         fields:
-          - name: title
-            label: Title
-            type: string
-            required: true
-          - name: description
-            label: Description
-            type: text
-            required: true
-
-      - name: mainSiteUrl
-        label: Main website URL
-        type: string
-        required: true
-
-      - name: repositoryUrl
-        label: Repository URL
-        type: string
+          - { name: title, label: Title, type: string, required: true }
+          - { name: description, label: Description, type: text, required: true }
+      - { name: mainSiteUrl, label: Main website URL, type: string, required: true }
+      - { name: repositoryUrl, label: Repository URL, type: string, required: true }
+      - name: socialImage
+        label: Default social image
+        type: image
         required: true
 
   - name: experiments
@@ -97,73 +50,22 @@ content:
         label: Slug
         type: string
         required: true
-        pattern:
-          regex: "^[a-z0-9-]+$"
-          message: Use lowercase letters, numbers, and hyphens only.
-        description: Permanent URL identifier. Avoid changing this after publication.
-
-      - name: title
-        label: Title
-        type: string
-        required: true
-
-      - name: summary
-        label: Summary
-        type: text
-        required: true
-        options:
-          minlength: 20
-          maxlength: 300
-
+        description: Permanent URL identifier. Use lowercase letters, numbers, and hyphens.
+      - { name: title, label: Title, type: string, required: true }
+      - { name: summary, label: Summary, type: text, required: true }
       - name: status
         label: Status
         type: select
         required: true
         options:
           values: [Idea, Prototype, Active, Paused, Archived]
-
-      - name: kind
-        label: Type
-        type: string
-        required: true
-
-      - name: technologies
-        label: Technologies
-        type: string
-        list: true
-
-      - name: launchPath
-        label: Launch path
-        type: string
-        required: true
-        description: Public path to the runnable experiment, such as /experiments/example/.
-
-      - name: sourceUrl
-        label: Source URL
-        type: string
-        required: true
-
-      - name: published
-        label: Published
-        type: boolean
-        default: false
-        description: Unpublished entries remain editable in Pages CMS but are omitted from the public site.
-
-      - name: featured
-        label: Featured
-        type: boolean
-        default: false
-
-      - name: created
-        label: Created
-        type: date
-        required: true
-
-      - name: updated
-        label: Updated
-        type: date
-        required: true
-
+      - { name: kind, label: Type, type: string, required: true }
+      - { name: technologies, label: Technologies, type: string, list: true }
+      - { name: sourceUrl, label: Source URL, type: string, required: true }
+      - { name: published, label: Published, type: boolean, default: false }
+      - { name: featured, label: Featured, type: boolean, default: false }
+      - { name: created, label: Created, type: date, required: true }
+      - { name: updated, label: Updated, type: date, required: true }
       - name: image
         label: Preview image
         type: image
@@ -171,12 +73,9 @@ content:
           path: experiments
           extensions: [svg, png, jpg, jpeg, webp]
           rename: safe
-
       - name: body
         label: Project notes
         type: rich-text
         options:
           format: markdown
           switcher: true
-          path: experiments
-          rename: safe

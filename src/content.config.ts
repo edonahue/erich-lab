@@ -10,7 +10,6 @@ const experiments = defineCollection({
     status: z.enum(['Idea', 'Prototype', 'Active', 'Paused', 'Archived']),
     kind: z.string(),
     technologies: z.array(z.string()).default([]),
-    launchPath: z.string(),
     sourceUrl: z.string().url(),
     published: z.boolean().default(false),
     featured: z.boolean().default(false),

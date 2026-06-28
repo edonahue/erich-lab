@@ -12,8 +12,13 @@ export async function getStaticPaths() {
 
 const { experiment } = Astro.props;
 const { Content } = await render(experiment);
+const launchPath = `/experiments/${experiment.data.slug}/`;
 ---
-<BaseLayout title={`${experiment.data.title} · Erich's Lab`} description={experiment.data.summary}>
+<BaseLayout
+  title={`${experiment.data.title} · Erich's Lab`}
+  description={experiment.data.summary}
+  image={experiment.data.image}
+>
   <section class="project-hero shell">
     <div>
       <p class="eyebrow">{experiment.data.kind} · {experiment.data.status}</p>
@@ -21,7 +26,7 @@ const { Content } = await render(experiment);
       <p class="lede">{experiment.data.summary}</p>
       <div class="tags">{experiment.data.technologies.map((technology) => <span>{technology}</span>)}</div>
       <div class="hero-actions">
-        <a class="button primary" href={experiment.data.launchPath}>Launch experiment</a>
+        <a class="button primary" href={launchPath}>Launch experiment</a>
         <a class="button" href={experiment.data.sourceUrl}>View source</a>
       </div>
     </div>

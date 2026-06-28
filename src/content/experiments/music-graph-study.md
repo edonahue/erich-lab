@@ -9,7 +9,6 @@ technologies:
   - CSS
   - JavaScript
   - localStorage
-launchPath: /experiments/music-graph-study/
 sourceUrl: https://github.com/edonahue/erich-lab/tree/main/public/experiments/music-graph-study
 published: true
 featured: true
