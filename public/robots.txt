@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://lab.erichdonahue.com/sitemap-index.xml
