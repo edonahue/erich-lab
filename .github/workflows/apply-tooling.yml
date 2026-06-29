@@ -9,13 +9,13 @@ permissions:
 
 jobs:
   apply:
-    if: github.head_ref == 'codex/lock-formatting-tooling-v2'
+    if: github.head_ref == 'codex/lock-formatting-tooling-v3'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: codex/lock-formatting-tooling-v2
+          ref: codex/lock-formatting-tooling-v3
       - uses: actions/setup-node@v6
         with:
           node-version: 22
