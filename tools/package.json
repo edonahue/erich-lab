@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "format": "prettier --config ../prettier.config.mjs --write ../package.json ../tools/package.json ../prettier.config.mjs ../.github/workflows/*.yml ../README.md ../docs/**/*.md",
-    "format:check": "prettier --config ../prettier.config.mjs --check ../package.json ../tools/package.json ../prettier.config.mjs ../.github/workflows/*.yml ../README.md ../docs/**/*.md",
+    "format": "prettier --config ../prettier.config.mjs --write ../package.json ../tools/package.json ../prettier.config.mjs",
+    "format:check": "prettier --config ../prettier.config.mjs --check ../package.json ../tools/package.json ../prettier.config.mjs",
     "test:smoke": "playwright test --config ../playwright.config.mjs",
     "playwright:install": "playwright install"
   },
