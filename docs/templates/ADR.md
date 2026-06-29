@@ -20,11 +20,11 @@ What will be done?
 
 ### Benefits
 
-- 
+-
 
 ### Costs and risks
 
-- 
+-
 
 ## Validation
 

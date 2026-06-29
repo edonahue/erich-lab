@@ -125,7 +125,8 @@
     }
 
     if (questionIndex >= activeQuestions.length) {
-      box.innerHTML = '<h2>Session complete</h2><p class="small">Use the mastery panel to choose the next area to review.</p><div class="actions"><button class="primary" id="again">Start again</button></div>';
+      box.innerHTML =
+        '<h2>Session complete</h2><p class="small">Use the mastery panel to choose the next area to review.</p><div class="actions"><button class="primary" id="again">Start again</button></div>';
       selectOne('#again').addEventListener('click', startSession);
       selectOne('#again').focus();
       return;

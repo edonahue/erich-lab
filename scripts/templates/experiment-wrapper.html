@@ -9,16 +9,16 @@
     <title>{{TITLE}}</title>
     <script>
       (() => {
-        const key = "erich-lab-theme";
+        const key = 'erich-lab-theme';
         let stored = null;
         try {
           stored = window.localStorage.getItem(key);
         } catch {}
-        const theme = stored === "light" ? "light" : "dark";
+        const theme = stored === 'light' ? 'light' : 'dark';
         document.documentElement.dataset.theme = theme;
         document
-          .querySelector("[data-theme-color]")
-          ?.setAttribute("content", theme === "light" ? "#f3f0e7" : "#111820");
+          .querySelector('[data-theme-color]')
+          ?.setAttribute('content', theme === 'light' ? '#f3f0e7' : '#111820');
       })();
     </script>
     <style>
@@ -30,7 +30,7 @@
         --line: rgba(238, 242, 239, 0.16);
         --accent: #cf7a4c;
       }
-      :root[data-theme="light"] {
+      :root[data-theme='light'] {
         color-scheme: light;
         --bg: #f3f0e7;
         --surface: #fffdf7;
@@ -109,7 +109,7 @@
         box-shadow: inset -4px -3px 0 rgba(0, 0, 0, 0.18);
         transition: transform 180ms ease;
       }
-      .theme-toggle[aria-pressed="true"] span {
+      .theme-toggle[aria-pressed='true'] span {
         transform: translateX(16px);
       }
       iframe {
@@ -155,11 +155,11 @@
     <iframe src="./{{ENTRY}}" title="{{TITLE}}" data-study-frame></iframe>
     <script>
       (() => {
-        const key = "erich-lab-theme";
+        const key = 'erich-lab-theme';
         const root = document.documentElement;
-        const toggle = document.querySelector("[data-theme-toggle]");
-        const frame = document.querySelector("[data-study-frame]");
-        const meta = document.querySelector("[data-theme-color]");
+        const toggle = document.querySelector('[data-theme-toggle]');
+        const frame = document.querySelector('[data-study-frame]');
+        const meta = document.querySelector('[data-theme-color]');
 
         const syncFrame = (theme) => {
           const doc = frame?.contentDocument;
@@ -167,25 +167,25 @@
         };
 
         const apply = (theme, persist = false) => {
-          const next = theme === "light" ? "light" : "dark";
+          const next = theme === 'light' ? 'light' : 'dark';
           root.dataset.theme = next;
           if (persist) {
             try {
               window.localStorage.setItem(key, next);
             } catch {}
           }
-          meta?.setAttribute("content", next === "light" ? "#f3f0e7" : "#111820");
-          const light = next === "light";
-          toggle?.setAttribute("aria-label", light ? "Switch to dark theme" : "Switch to light theme");
-          toggle?.setAttribute("aria-pressed", String(light));
+          meta?.setAttribute('content', next === 'light' ? '#f3f0e7' : '#111820');
+          const light = next === 'light';
+          toggle?.setAttribute('aria-label', light ? 'Switch to dark theme' : 'Switch to light theme');
+          toggle?.setAttribute('aria-pressed', String(light));
           syncFrame(next);
         };
 
-        toggle?.addEventListener("click", () => {
-          apply(root.dataset.theme === "light" ? "dark" : "light", true);
+        toggle?.addEventListener('click', () => {
+          apply(root.dataset.theme === 'light' ? 'dark' : 'light', true);
         });
-        frame?.addEventListener("load", () => syncFrame(root.dataset.theme));
-        window.addEventListener("storage", (event) => {
+        frame?.addEventListener('load', () => syncFrame(root.dataset.theme));
+        window.addEventListener('storage', (event) => {
           if (event.key === key) apply(event.newValue, false);
         });
         apply(root.dataset.theme, false);

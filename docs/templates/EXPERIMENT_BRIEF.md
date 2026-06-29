@@ -31,11 +31,11 @@ Describe the smallest useful path through the experiment.
 
 ### Public
 
-- 
+-
 
 ### Private
 
-- 
+-
 
 ## Architecture roles
 
@@ -44,14 +44,14 @@ Describe logical responsibilities before naming machines or vendors.
 ## Chosen technologies
 
 | Concern | Choice | Why it fits |
-|---|---|---|
-| | | |
+| ------- | ------ | ----------- |
+|         |        |             |
 
 ## Alternatives considered
 
 | Decision | Alternatives | Why not now? | Revisit trigger |
-|---|---|---|---|
-| | | | |
+| -------- | ------------ | ------------ | --------------- |
+|          |              |              |                 |
 
 ## Offline and failure behavior
 
