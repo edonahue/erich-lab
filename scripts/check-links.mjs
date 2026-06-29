@@ -5,7 +5,16 @@ import process from 'node:process';
 const root = process.cwd();
 const reportPath = path.join(root, process.env.LINK_REPORT || 'link-report.md');
 const includedExtensions = new Set(['.astro', '.css', '.html', '.js', '.json', '.md', '.mjs', '.ts', '.yml', '.yaml']);
-const ignoredDirectories = new Set(['.git', '.astro', '.wrangler', 'dist', 'node_modules', 'playwright-report', 'public/downloads', 'test-results']);
+const ignoredDirectories = new Set([
+  '.git',
+  '.astro',
+  '.wrangler',
+  'dist',
+  'node_modules',
+  'playwright-report',
+  'public/downloads',
+  'test-results',
+]);
 const ignoredFiles = new Set(['package-lock.json']);
 const urlPattern = /https:\/\/[^\s"'<>`)\]]+/g;
 
@@ -15,7 +24,8 @@ async function walk(directory) {
     const fullPath = path.join(directory, entry.name);
     const relative = path.relative(root, fullPath).replaceAll(path.sep, '/');
     if (entry.isDirectory()) {
-      if (!ignoredDirectories.has(relative) && !ignoredDirectories.has(entry.name)) files.push(...(await walk(fullPath)));
+      if (!ignoredDirectories.has(relative) && !ignoredDirectories.has(entry.name))
+        files.push(...(await walk(fullPath)));
     } else if (includedExtensions.has(path.extname(entry.name)) && !ignoredFiles.has(entry.name)) {
       files.push(fullPath);
     }

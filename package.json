@@ -13,14 +13,17 @@
     "check": "npm run validate && astro build",
     "test:smoke": "playwright test",
     "links:check": "node scripts/check-links.mjs",
-    "format": "npx --yes prettier@3.6.2 --write .",
-    "format:check": "npx --yes prettier@3.6.2 --check .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "astro": "^6.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "1.55.0",
+    "prettier": "3.6.2",
+    "prettier-plugin-astro": "0.14.1",
     "wrangler": "^4.0.0"
   },
   "engines": {

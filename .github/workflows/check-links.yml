@@ -2,7 +2,7 @@ name: Check external links
 
 on:
   schedule:
-    - cron: '17 13 1 * *'
+    - cron: "17 13 1 * *"
   workflow_dispatch:
 
 permissions:

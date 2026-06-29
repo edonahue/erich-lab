@@ -17,6 +17,7 @@ const {
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 const imageUrl = new URL(image, Astro.site);
 ---
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -36,7 +37,10 @@ const imageUrl = new URL(image, Astro.site);
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={imageUrl} />
     <meta name="theme-color" content="#111820" data-theme-color />
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2225%22 fill=%22%2317242b%22/><text x=%2250%22 y=%2262%22 text-anchor=%22middle%22 font-size=%2240%22 fill=%22white%22>E/L</text></svg>" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2225%22 fill=%22%2317242b%22/><text x=%2250%22 y=%2262%22 text-anchor=%22middle%22 font-size=%2240%22 fill=%22white%22>E/L</text></svg>"
+    />
     <script is:inline>
       (() => {
         const key = 'erich-lab-theme';
@@ -48,32 +52,35 @@ const imageUrl = new URL(image, Astro.site);
       })();
     </script>
     <title>{title}</title>
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Person",
-          "@id": "https://erichdonahue.com/#erich",
-          "name": "Erich Donahue",
-          "url": "https://erichdonahue.com/",
-          "sameAs": [
-            "https://erichdonahue.com/",
-            "https://github.com/edonahue",
-            "https://www.linkedin.com/in/erichdonahue/",
-            "https://x.com/erichdonahue"
-          ]
-        },
-        {
-          "@type": "WebSite",
-          "@id": "https://lab.erichdonahue.com/#website",
-          "url": "https://lab.erichdonahue.com/",
-          "name": "Erich's Lab",
-          "description": "Small tools, studies, and working experiments by Erich Donahue.",
-          "author": { "@id": "https://erichdonahue.com/#erich" },
-          "isPartOf": { "@id": "https://erichdonahue.com/#website" }
-        }
-      ]
-    })} />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'Person',
+            '@id': 'https://erichdonahue.com/#erich',
+            name: 'Erich Donahue',
+            url: 'https://erichdonahue.com/',
+            sameAs: [
+              'https://erichdonahue.com/',
+              'https://github.com/edonahue',
+              'https://www.linkedin.com/in/erichdonahue/',
+              'https://x.com/erichdonahue',
+            ],
+          },
+          {
+            '@type': 'WebSite',
+            '@id': 'https://lab.erichdonahue.com/#website',
+            url: 'https://lab.erichdonahue.com/',
+            name: "Erich's Lab",
+            description: 'Small tools, studies, and working experiments by Erich Donahue.',
+            author: { '@id': 'https://erichdonahue.com/#erich' },
+            isPartOf: { '@id': 'https://erichdonahue.com/#website' },
+          },
+        ],
+      })}
+    />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -88,7 +95,13 @@ const imageUrl = new URL(image, Astro.site);
           <a href="/#about">About</a>
           <a href={site.repositoryUrl}>Source</a>
         </nav>
-        <button class="theme-toggle" type="button" aria-label="Switch to light theme" aria-pressed="false" data-theme-toggle>
+        <button
+          class="theme-toggle"
+          type="button"
+          aria-label="Switch to light theme"
+          aria-pressed="false"
+          data-theme-toggle
+        >
           <span aria-hidden="true"></span>
         </button>
       </div>

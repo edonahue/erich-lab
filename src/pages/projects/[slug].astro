@@ -17,9 +17,18 @@ const launchPath = `/experiments/${experiment.data.slug}/`;
 const graduated = experiment.data.status === 'Graduated' && experiment.data.destinationUrl;
 const primaryHref = graduated ? experiment.data.destinationUrl : launchPath;
 const primaryLabel = graduated ? 'Visit graduated project' : 'Launch experiment';
-const created = experiment.data.created.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-const updated = experiment.data.updated.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+const created = experiment.data.created.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+const updated = experiment.data.updated.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
 ---
+
 <BaseLayout
   title={`${experiment.data.title} · Erich's Lab`}
   description={experiment.data.summary}
@@ -37,12 +46,16 @@ const updated = experiment.data.updated.toLocaleDateString('en-US', { year: 'num
         <DownloadMenu offline={experiment.data.offline} />
         <a class="button" href={experiment.data.sourceUrl}>View source</a>
       </div>
-      {experiment.data.offline && (
-        <p class:list={['download-note', `download-note--${experiment.data.offline.status}`]}>
-          <strong>{experiment.data.offline.status === 'full' ? 'Full offline edition.' : 'Limited offline edition.'}</strong>{' '}
-          {experiment.data.offline.note}
-        </p>
-      )}
+      {
+        experiment.data.offline && (
+          <p class:list={['download-note', `download-note--${experiment.data.offline.status}`]}>
+            <strong>
+              {experiment.data.offline.status === 'full' ? 'Full offline edition.' : 'Limited offline edition.'}
+            </strong>{' '}
+            {experiment.data.offline.note}
+          </p>
+        )
+      }
     </div>
     {experiment.data.image && <img src={experiment.data.image} alt="" />}
   </section>

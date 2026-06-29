@@ -24,10 +24,10 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
+      - name: Check formatting
+        run: npm run format:check
       - name: Validate content and build Astro
         run: npm run check
-      - name: Install Playwright without changing the lockfile
-        run: npm install --no-save --package-lock=false @playwright/test@1.55.0
       - name: Install Chromium for smoke tests
         run: npx playwright install --with-deps chromium
       - name: Run browser smoke tests

@@ -9,6 +9,7 @@ const experiments = (await getCollection('experiments', ({ data }) => data.publi
 });
 const shelfLabel = `${experiments.length} ${experiments.length === 1 ? 'experiment' : 'experiments'} on the shelf`;
 ---
+
 <BaseLayout>
   <section class="hero shell">
     <p class="eyebrow">{site.eyebrow}</p>
@@ -30,36 +31,46 @@ const shelfLabel = `${experiments.length} ${experiments.length === 1 ? 'experime
     </div>
 
     <div class="experiment-grid">
-      {experiments.map((experiment) => {
-        const launchPath = `/experiments/${experiment.data.slug}/`;
-        const graduated = experiment.data.status === 'Graduated' && experiment.data.destinationUrl;
-        const primaryHref = graduated ? experiment.data.destinationUrl : launchPath;
-        const primaryLabel = graduated ? 'Visit project' : 'Launch';
-        return (
-          <article class:list={['experiment-card', { featured: experiment.data.featured }] }>
-            {experiment.data.image && <img class="preview" src={experiment.data.image} alt="" />}
-            <div class="card-meta">
-              <span>{experiment.data.kind}</span>
-              <span>{experiment.data.status}</span>
-            </div>
-            {experiment.data.offline && (
-              <p class:list={['availability-badge', `availability-badge--${experiment.data.offline.status}`]}>
-                {experiment.data.offline.status === 'full' ? 'Works offline' : 'Limited offline edition'}
-              </p>
-            )}
-            <h3>{experiment.data.title}</h3>
-            <p>{experiment.data.summary}</p>
-            <div class="tags">
-              {experiment.data.technologies.map((technology) => <span>{technology}</span>)}
-            </div>
-            <div class="card-actions">
-              <a class="button primary" href={primaryHref}>{primaryLabel}</a>
-              <a class="text-link" href={`/projects/${experiment.data.slug}/`}>Read notes</a>
-              <a class="text-link" href={experiment.data.sourceUrl}>Source</a>
-            </div>
-          </article>
-        );
-      })}
+      {
+        experiments.map((experiment) => {
+          const launchPath = `/experiments/${experiment.data.slug}/`;
+          const graduated = experiment.data.status === 'Graduated' && experiment.data.destinationUrl;
+          const primaryHref = graduated ? experiment.data.destinationUrl : launchPath;
+          const primaryLabel = graduated ? 'Visit project' : 'Launch';
+          return (
+            <article class:list={['experiment-card', { featured: experiment.data.featured }]}>
+              {experiment.data.image && <img class="preview" src={experiment.data.image} alt="" />}
+              <div class="card-meta">
+                <span>{experiment.data.kind}</span>
+                <span>{experiment.data.status}</span>
+              </div>
+              {experiment.data.offline && (
+                <p class:list={['availability-badge', `availability-badge--${experiment.data.offline.status}`]}>
+                  {experiment.data.offline.status === 'full' ? 'Works offline' : 'Limited offline edition'}
+                </p>
+              )}
+              <h3>{experiment.data.title}</h3>
+              <p>{experiment.data.summary}</p>
+              <div class="tags">
+                {experiment.data.technologies.map((technology) => (
+                  <span>{technology}</span>
+                ))}
+              </div>
+              <div class="card-actions">
+                <a class="button primary" href={primaryHref}>
+                  {primaryLabel}
+                </a>
+                <a class="text-link" href={`/projects/${experiment.data.slug}/`}>
+                  Read notes
+                </a>
+                <a class="text-link" href={experiment.data.sourceUrl}>
+                  Source
+                </a>
+              </div>
+            </article>
+          );
+        })
+      }
     </div>
   </section>
 
@@ -69,13 +80,15 @@ const shelfLabel = `${experiments.length} ${experiments.length === 1 ? 'experime
       <h2 id="about-title">{site.principlesHeading}</h2>
     </div>
     <div class="principle-grid">
-      {site.principles.map((principle, index) => (
-        <article>
-          <span class="principle-number">{String(index + 1).padStart(2, '0')}</span>
-          <h3>{principle.title}</h3>
-          <p>{principle.description}</p>
-        </article>
-      ))}
+      {
+        site.principles.map((principle, index) => (
+          <article>
+            <span class="principle-number">{String(index + 1).padStart(2, '0')}</span>
+            <h3>{principle.title}</h3>
+            <p>{principle.description}</p>
+          </article>
+        ))
+      }
     </div>
   </section>
 </BaseLayout>
