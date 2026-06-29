@@ -4,6 +4,10 @@
   X-Frame-Options: SAMEORIGIN
   Content-Security-Policy: frame-ancestors 'self'
 
+# Advertise the LLM/agent context file for HTTP Link-based discovery.
+/
+  Link: </llms.txt>; rel="service-doc"; type="text/plain"
+
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
 

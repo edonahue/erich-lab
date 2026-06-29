@@ -27,6 +27,25 @@ const updated = experiment.data.updated.toLocaleDateString('en-US', {
   month: 'short',
   day: 'numeric',
 });
+
+const pageUrl = new URL(`/projects/${experiment.data.slug}/`, Astro.site).toString();
+const blogPostingSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: experiment.data.title,
+  description: experiment.data.summary,
+  url: pageUrl,
+  datePublished: experiment.data.created.toISOString().slice(0, 10),
+  dateModified: experiment.data.updated.toISOString().slice(0, 10),
+  author: {
+    '@type': 'Person',
+    '@id': 'https://erichdonahue.com/#erich',
+    name: 'Erich Donahue',
+    url: 'https://erichdonahue.com/',
+  },
+  isPartOf: { '@id': 'https://lab.erichdonahue.com/#website' },
+  keywords: experiment.data.technologies.join(', '),
+};
 ---
 
 <BaseLayout
@@ -34,6 +53,9 @@ const updated = experiment.data.updated.toLocaleDateString('en-US', {
   description={experiment.data.summary}
   image={experiment.data.image}
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
+  </Fragment>
   <section class="project-hero shell">
     <div>
       <p class="eyebrow">{experiment.data.kind} · {experiment.data.status}</p>

@@ -1,0 +1,27 @@
+# Erich's Lab
+
+> A public shelf for ideas that are useful before they are finished.
+
+Erich's Lab (lab.erichdonahue.com) is a companion site to erichdonahue.com — a low-ceremony space for small tools, learning artifacts, data experiments, and prototypes by Erich Donahue. Experiments can stay lightweight, graduate into larger projects, or simply remain useful working objects.
+
+## Current experiments
+
+- Music-Credit Graph Study Lab: https://lab.erichdonahue.com/projects/music-graph-study/ — A concept guide, architecture plan, adaptive quiz, and flashcard lab for a distributed music-credit graph using Python, Docker Swarm, Redis/RQ, Parquet/DuckDB, and PostgreSQL. Available as a full offline single-file HTML download.
+
+## About
+
+Erich Donahue is a decision science product and data platform leader based in the Orlando, Florida area. He builds practical decision tools, forecasting workflows, data products, music tools, and local-first creative systems. The lab is where ideas live before they are production-ready.
+
+## Canonical profiles
+
+- Main site: https://erichdonahue.com/
+- GitHub: https://github.com/edonahue
+- LinkedIn: https://www.linkedin.com/in/erichdonahue/
+- X/Twitter: https://x.com/erichdonahue
+
+## Site
+
+- Home: https://lab.erichdonahue.com/
+- Lab repository: https://github.com/edonahue/erich-lab
+- Sitemap: https://lab.erichdonahue.com/sitemap.xml
+- RSS: https://lab.erichdonahue.com/rss.xml
