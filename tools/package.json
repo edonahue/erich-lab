@@ -1,0 +1,13 @@
+{
+  "name": "erich-lab-tooling",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@playwright/test": "1.61.1",
+    "prettier": "3.8.4",
+    "prettier-plugin-astro": "0.14.1"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
