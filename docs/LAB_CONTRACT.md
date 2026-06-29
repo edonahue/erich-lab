@@ -153,10 +153,33 @@ Before publishing data, images, audio, or generated derivatives, record:
 
 Technical access is not permission to redistribute.
 
+## Tooling and formatting
+
+Repository development tools used by CI must be exact-version `devDependencies` recorded in `package-lock.json`. Avoid ad hoc `npm install --no-save` or floating `npx --yes` installs in normal validation workflows.
+
+The canonical formatter configuration is `prettier.config.mjs`. It must load `prettier-plugin-astro` and explicitly select the Astro parser for `.astro` files. Generated wrappers, downloads, build output, and lockfiles may remain excluded through `.prettierignore` when formatting them would create noise or edit generated artifacts.
+
+Before opening or merging a pull request that changes maintained source or documentation:
+
+```bash
+npm ci
+npm run format
+npm run format:check
+npm run check
+```
+
+Interactive labs also run the browser smoke suite after installing the matching browser binary:
+
+```bash
+npx playwright install chromium
+npm run test:smoke
+```
+
 ## Validation and release
 
 Every pull request should pass:
 
+- Astro-aware formatting checks
 - Experiment generation
 - JavaScript syntax validation
 - Astro content validation and production build
