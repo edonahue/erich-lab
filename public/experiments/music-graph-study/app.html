@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta
       name="description"
       content="A concept guide, architecture plan, adaptive quiz, and flashcard lab for a distributed music-credit graph project."
@@ -223,10 +223,10 @@
             </table>
           </div>
           <p>
-            Discogs catalog facts such as releases, artist names, and credits are identified as CC0 data in the API
-            terms, while collection membership and other user-associated data are restricted. The collection is
-            therefore a private seed; public outputs should use derived catalog facts and should follow applicable
-            notices and linking requirements.
+            Discogs releases its monthly catalog data dumps—releases, artist names, and credits—under CC0, while
+            collection membership and other user-associated data are restricted. Separately, API access is governed by
+            the Discogs API Terms of Use. The collection is therefore a private seed; public outputs should use derived
+            catalog facts and should follow applicable notices and linking requirements.
           </p>
 
           <h2>7. Alternatives considered</h2>
@@ -353,7 +353,7 @@
             this build.
           </p>
 
-          <h2>1. Configuration management: Ansible</h2>
+          <h2 id="c-ansible">1. Configuration management: Ansible</h2>
           <p>
             Ansible is an agentless automation system that applies a declared configuration from a
             <strong>control node</strong> to <strong>managed nodes</strong> listed in an inventory. Playbooks describe
@@ -373,7 +373,7 @@
             >
           </p>
 
-          <h2>2. Containers, images, and multi-platform builds</h2>
+          <h2 id="c-containers">2. Containers, images, and multi-platform builds</h2>
           <p>
             A container is an isolated process created from an image. An image packages the filesystem and metadata
             required to run an application. Different CPU architectures need compatible image variants; a multi-platform
@@ -400,7 +400,7 @@
             >
           </p>
 
-          <h2>3. Orchestration: Docker Swarm</h2>
+          <h2 id="c-swarm">3. Orchestration: Docker Swarm</h2>
           <p>
             Docker Swarm is Docker Engine’s built-in orchestration mode. A swarm contains manager and worker nodes. You
             declare a <strong>service</strong> as desired state; managers schedule <strong>tasks</strong> on nodes and
@@ -430,7 +430,7 @@ docker service ps lab-hello</pre
             >
           </p>
 
-          <h2>4. Queues and distributed task graphs: RQ versus Dask</h2>
+          <h2 id="c-queues">4. Queues and distributed task graphs: RQ versus Dask</h2>
           <p>
             RQ is a Python background-job queue backed by Redis or Valkey. Producers enqueue callable work; workers
             reserve jobs, execute them, and record status or failure. Dask instead represents computations as task
@@ -481,7 +481,7 @@ print(job.id)</pre
             >
           </p>
 
-          <h2>5. Analytical files and databases</h2>
+          <h2 id="c-data">5. Analytical files and databases</h2>
           <p>
             <strong>Parquet</strong> is a column-oriented file format designed for efficient analytical storage and
             selective reads. <strong>DuckDB</strong> is an embedded analytical SQL engine that can query Parquet
@@ -517,7 +517,7 @@ ORDER BY credit_count DESC;</pre
             >
           </p>
 
-          <h2>6. Graph models and shortest paths</h2>
+          <h2 id="c-graphs">6. Graph models and shortest paths</h2>
           <p>
             A graph contains nodes and edges. A <strong>bipartite graph</strong> has two node sets, with edges only
             between sets. Here those sets are artists and releases. In an unweighted graph, breadth-first search finds a
@@ -560,7 +560,7 @@ print(nx.shortest_path(G, 'artist:a', 'artist:b'))</pre
             >
           </p>
 
-          <h2>7. Compact adjacency arrays and memory mapping</h2>
+          <h2 id="c-arrays">7. Compact adjacency arrays and memory mapping</h2>
           <p>
             An adjacency list stores the neighbors of each node. A compact CSR-like representation can store all
             neighbors in one integer array plus an offsets array that marks where each node’s neighbors begin and end.
@@ -578,7 +578,7 @@ print(nx.shortest_path(G, 'artist:a', 'artist:b'))</pre
             >
           </p>
 
-          <h2>8. APIs, static-first delivery, and network boundaries</h2>
+          <h2 id="c-delivery">8. APIs, static-first delivery, and network boundaries</h2>
           <p>
             FastAPI builds typed HTTP APIs; Pydantic validates and serializes data against declared models. A
             static-first application publishes its essential HTML, JavaScript, and data artifacts ahead of time, so
@@ -601,7 +601,7 @@ print(nx.shortest_path(G, 'artist:a', 'artist:b'))</pre
             · <a href="https://tailscale.com/kb/1017/install" target="_blank" rel="noopener">Tailscale</a>
           </p>
 
-          <h2>9. Testing, provenance, and observability</h2>
+          <h2 id="c-quality">9. Testing, provenance, and observability</h2>
           <p>
             Unit tests verify small transformations and graph rules. Integration tests exercise queues, databases, and
             services. Browser tests validate the public experience. Provenance records which source snapshot, parser
@@ -619,10 +619,10 @@ print(nx.shortest_path(G, 'artist:a', 'artist:b'))</pre
             <a href="https://mypy.readthedocs.io/en/stable/" target="_blank" rel="noopener">mypy</a>
           </p>
 
-          <h2>10. Data rights and responsible publication</h2>
+          <h2 id="c-rights">10. Data rights and responsible publication</h2>
           <p>
-            Technical availability is not the same as permission to republish. Discogs identifies core catalog
-            fields—including releases, artists, and credits—as CC0 data, while collection, wantlist, marketplace, and
+            Technical availability is not the same as permission to republish. Discogs releases its monthly database
+            exports—including releases, artists, and credits—under CC0, while collection, wantlist, marketplace, and
             user-associated information are restricted. API use also carries notice, linking, freshness, and other
             contractual requirements.
           </p>
@@ -687,7 +687,19 @@ print(nx.shortest_path(G, 'artist:a', 'artist:b'))</pre
               Concept questions test transferable knowledge. Build questions test this project’s selected tradeoffs and
               constraints.
             </p>
-            <div class="actions"><button id="reset">Reset progress</button></div>
+            <div class="actions">
+              <button id="reset">Reset progress</button>
+              <button id="exportBtn">Export</button>
+              <button id="importBtn">Import</button>
+            </div>
+            <div class="io-panel" id="ioPanel" hidden>
+              <label class="control-label" id="ioLabel" for="ioText">Progress data</label>
+              <textarea id="ioText" rows="4" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+              <div class="actions">
+                <button class="primary" id="ioApply">Apply</button><button id="ioClose">Close</button>
+              </div>
+              <p class="small" id="ioMsg" role="status" aria-live="polite"></p>
+            </div>
           </aside>
         </div>
       </section>

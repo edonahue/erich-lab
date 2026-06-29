@@ -29,6 +29,7 @@
 }
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 body {
   margin: 0;
@@ -62,6 +63,8 @@ code {
   max-width: 1160px;
   margin: auto;
   padding: 22px;
+  padding-left: max(22px, env(safe-area-inset-left));
+  padding-right: max(22px, env(safe-area-inset-right));
 }
 header {
   display: flex;
@@ -117,11 +120,13 @@ h3 {
   border: 0;
   border-radius: 8px;
   padding: 9px 13px;
+  min-height: 44px;
   background: transparent;
   color: var(--m);
   font-weight: 700;
   white-space: nowrap;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 .topnav button.on {
   background: var(--p);
@@ -219,6 +224,7 @@ input:disabled {
   border-radius: 10px;
   background: var(--ctl);
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 .choice input {
   width: auto;
@@ -243,11 +249,42 @@ input:disabled {
 }
 .actions button {
   padding: 9px 13px;
+  min-height: 44px;
   border: 1px solid var(--l);
   border-radius: 8px;
   background: var(--ctl);
   color: var(--i);
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.control button {
+  min-height: 44px;
+}
+.link-btn {
+  padding: 0;
+  min-height: 0;
+  border: 0;
+  background: transparent;
+  color: var(--a);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.io-panel {
+  margin-top: 12px;
+}
+.io-panel textarea {
+  width: 100%;
+  margin-top: 6px;
+  padding: 9px;
+  font-size: 16px;
+  line-height: 1.4;
+  border: 1px solid var(--l);
+  border-radius: 8px;
+  background: var(--ctl);
+  color: var(--i);
+  resize: vertical;
 }
 .feedback {
   display: none;
@@ -306,6 +343,7 @@ input:disabled {
   margin: 38px 0 12px;
   padding-top: 12px;
   border-top: 1px solid var(--l);
+  scroll-margin-top: 16px;
 }
 .guide p,
 .guide li {
@@ -501,6 +539,8 @@ pre {
 @media (max-width: 520px) {
   .shell {
     padding: 13px;
+    padding-left: max(13px, env(safe-area-inset-left));
+    padding-right: max(13px, env(safe-area-inset-right));
   }
   .toolbar {
     grid-template-columns: 1fr;

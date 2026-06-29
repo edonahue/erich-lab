@@ -4,6 +4,25 @@
   const STORAGE_KEY = 'musicGraphStudyV5';
   const LEGACY_STORAGE_KEY = 'musicGraphStudyV4';
 
+  // Maps a quiz category to the concept section that explains it, so a missed
+  // question can offer a jump straight to the relevant study material.
+  const CONCEPT_ANCHORS = {
+    Ansible: 'c-ansible',
+    Containers: 'c-containers',
+    Swarm: 'c-swarm',
+    Queues: 'c-queues',
+    Data: 'c-data',
+    Graphs: 'c-graphs',
+    Storage: 'c-swarm',
+    Delivery: 'c-delivery',
+    Quality: 'c-quality',
+    Rights: 'c-rights',
+    Jobs: 'c-queues',
+    Architecture: 'c-swarm',
+    Privacy: 'c-rights',
+    Product: 'c-delivery',
+  };
+
   const blankState = () => ({
     n: 0,
     ok: 0,
@@ -12,23 +31,34 @@
     seen: {},
   });
 
+  const normalizeState = (saved) => ({
+    ...blankState(),
+    ...saved,
+    category: {
+      concept: saved.category?.concept || {},
+      build: saved.category?.build || {},
+    },
+    track: {
+      concept: { n: 0, ok: 0, ...(saved.track?.concept || {}) },
+      build: { n: 0, ok: 0, ...(saved.track?.build || {}) },
+    },
+    seen: saved.seen || {},
+  });
+
+  const shuffledOrder = (length) => {
+    const order = [...Array(length).keys()];
+    for (let i = order.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [order[i], order[j]] = [order[j], order[i]];
+    }
+    return order;
+  };
+
   function loadState() {
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
       if (saved && typeof saved === 'object') {
-        return {
-          ...blankState(),
-          ...saved,
-          category: {
-            concept: saved.category?.concept || {},
-            build: saved.category?.build || {},
-          },
-          track: {
-            concept: { n: 0, ok: 0, ...(saved.track?.concept || {}) },
-            build: { n: 0, ok: 0, ...(saved.track?.build || {}) },
-          },
-          seen: saved.seen || {},
-        };
+        return normalizeState(saved);
       }
 
       const legacy = JSON.parse(localStorage.getItem(LEGACY_STORAGE_KEY) || 'null');
@@ -135,11 +165,12 @@
     const question = activeQuestions[questionIndex];
     selectedAnswer = null;
     answered = false;
+    const order = shuffledOrder(question.o.length);
     box.innerHTML = `
       <div class="meta"><span>${trackLabel(question.t)} · ${question.c}</span><span>${questionIndex + 1} / ${activeQuestions.length}</span></div>
       <fieldset class="question-set">
         <legend class="question">${question.q}</legend>
-        ${question.o.map((option, index) => `<label class="choice" data-n="${index}"><input type="radio" name="answer" value="${index}"> ${option}</label>`).join('')}
+        ${order.map((n) => `<label class="choice" data-n="${n}"><input type="radio" name="answer" value="${n}"> ${question.o[n]}</label>`).join('')}
       </fieldset>
       <div class="feedback" id="fb" role="status" aria-live="polite"></div>
       <div class="actions"><button class="primary" id="check">Check</button><button id="next" disabled>Next</button></div>`;
@@ -174,15 +205,31 @@
     S.track[question.t].ok += Number(correct);
     S.seen[question.key] = (S.seen[question.key] || 0) + 1;
 
-    selectAll('.choice').forEach((choice, index) => {
+    selectAll('.choice').forEach((choice) => {
+      const n = Number(choice.dataset.n);
       choice.querySelector('input').disabled = true;
-      if (index === question.a) choice.classList.add('good');
-      else if (index === selectedAnswer) choice.classList.add('bad');
+      if (n === question.a) choice.classList.add('good');
+      else if (n === selectedAnswer) choice.classList.add('bad');
     });
 
     const feedback = selectOne('#fb');
     feedback.className = 'feedback show';
-    feedback.innerHTML = `<strong>${correct ? 'Correct' : 'Review this one'}</strong><br>${question.w}`;
+    const anchor = CONCEPT_ANCHORS[question.c];
+    const review =
+      !correct && anchor
+        ? '<div class="actions"><button class="link-btn" id="review">Review the related concept →</button></div>'
+        : '';
+    feedback.innerHTML = `<strong>${correct ? 'Correct' : 'Review this one'}</strong><br>${question.w}${review}`;
+
+    if (!correct && anchor) {
+      selectOne('#review')?.addEventListener('click', () => {
+        const conceptsTab = selectAll('.topnav [role="tab"]').find((tab) => tab.dataset.v === 'concepts');
+        if (conceptsTab) activateTab(conceptsTab);
+        const target = document.getElementById(anchor);
+        requestAnimationFrame(() => target?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+      });
+    }
+
     selectOne('#check').disabled = true;
     selectOne('#next').disabled = false;
     selectOne('#next').focus();
@@ -278,6 +325,63 @@
       S = blankState();
       startSession();
     }
+  });
+
+  const ioPanel = selectOne('#ioPanel');
+  const ioText = selectOne('#ioText');
+  const ioLabel = selectOne('#ioLabel');
+  const ioApply = selectOne('#ioApply');
+  const ioMsg = selectOne('#ioMsg');
+
+  function openIo(mode) {
+    ioPanel.hidden = false;
+    ioMsg.textContent = '';
+    if (mode === 'export') {
+      const json = JSON.stringify(S);
+      ioText.value = json;
+      ioText.readOnly = true;
+      ioApply.hidden = true;
+      ioLabel.textContent = 'Your progress — long-press to copy on iPhone';
+      ioText.focus();
+      ioText.select();
+      if (navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(json).then(
+          () => {
+            ioMsg.textContent = 'Copied to clipboard.';
+          },
+          () => {},
+        );
+      }
+    } else {
+      ioText.value = '';
+      ioText.readOnly = false;
+      ioApply.hidden = false;
+      ioLabel.textContent = 'Paste exported progress, then Apply';
+      ioText.focus();
+    }
+  }
+
+  selectOne('#exportBtn').addEventListener('click', () => openIo('export'));
+  selectOne('#importBtn').addEventListener('click', () => openIo('import'));
+  selectOne('#ioClose').addEventListener('click', () => {
+    ioPanel.hidden = true;
+  });
+  ioApply.addEventListener('click', () => {
+    let parsed;
+    try {
+      parsed = JSON.parse(ioText.value.trim());
+    } catch {
+      ioMsg.textContent = 'That does not look like valid saved progress.';
+      return;
+    }
+    if (!parsed || typeof parsed !== 'object' || typeof parsed.n !== 'number' || !parsed.track) {
+      ioMsg.textContent = 'That does not look like saved progress from this lab.';
+      return;
+    }
+    S = normalizeState(parsed);
+    save();
+    startSession();
+    ioMsg.textContent = 'Progress imported.';
   });
   selectOne('#deck').addEventListener('change', () => {
     cardIndex = 0;

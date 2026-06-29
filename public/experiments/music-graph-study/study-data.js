@@ -257,10 +257,10 @@ const Q = [
   {
     t: 'concept',
     c: 'Rights',
-    q: 'Under the current Discogs API terms, which category is identified as restricted rather than CC0 catalog data?',
+    q: 'Discogs releases its catalog data dumps under CC0. Which category is instead treated as restricted, user-associated data?',
     o: ['Release credits', 'Artist names', 'A user collection', 'Release titles'],
     a: 2,
-    w: 'Collection and other user-associated information are restricted; core catalog facts such as artists, releases, and credits are identified as CC0.',
+    w: 'Discogs publishes its monthly database exports (artists, releases, credits) under CC0. Collection, wantlist, and marketplace data are user-associated and restricted, and API use adds its own Terms of Use obligations.',
   },
 
   {
@@ -287,7 +287,7 @@ const Q = [
       'Randomly on any worker',
       'Pinned to the application-state host with backups',
       'Inside the static Astro site',
-      'Only on the x600 when awake',
+      'Only on the optional build node when awake',
     ],
     a: 1,
     w: 'These services carry state and must not be scheduled as though every node had identical durable storage.',
