@@ -15,26 +15,28 @@ npm ci
 npm run dev
 ```
 
-Validate manifests, generated artifacts, JavaScript, content, and the Astro production build:
+Validate formatting, manifests, generated artifacts, JavaScript, content, and the Astro production build:
 
 ```bash
+npm run format:check
 npm run check
 ```
 
 Run the browser smoke suite after a production build:
 
 ```bash
-npm install --no-save --package-lock=false @playwright/test@1.55.0
 npx playwright install chromium
 npm run test:smoke
 ```
 
-Formatting is available through pinned Prettier commands without adding another lockfile dependency:
+Prettier, the Astro formatting plugin, and Playwright Test are exact-version development dependencies recorded in `package-lock.json`. Formatting is handled by the repository-local tools:
 
 ```bash
 npm run format
 npm run format:check
 ```
+
+`prettier.config.mjs` is the canonical formatting configuration. It loads `prettier-plugin-astro` and explicitly uses the Astro parser for `.astro` files.
 
 ## Experiment structure
 
@@ -84,7 +86,7 @@ There is no scaffold command yet. The structure should prove itself with a secon
 6. Add preview media under `public/images/experiments/` when useful.
 7. Add or extend browser smoke coverage for interactive behavior.
 8. Record consequential decisions using `docs/templates/ADR.md`.
-9. Run `npm run check` and `npm run test:smoke`.
+9. Run `npm run format`, then `npm run format:check`, `npm run check`, and `npm run test:smoke`.
 
 The filename, frontmatter slug, manifest slug, project URL, and experiment URL must agree:
 
@@ -149,10 +151,11 @@ The repository includes:
 - Zod-validated Astro content
 - Cross-file manifest and generated-artifact validation
 - JavaScript syntax checks for scripts and standalone experiments
+- Astro-aware Prettier formatting enforced in CI
 - Playwright smoke tests for public routes, iframe interaction, local state, offline use, redirects, and sitemap output
 - Scheduled external-link checking that creates or updates a GitHub issue on failure
 - Low-volume Dependabot updates for npm and GitHub Actions
-- EditorConfig and Prettier configuration
+- EditorConfig and locked formatting/test tooling
 - Conservative security and indexing headers
 
 External links are checked on a schedule rather than blocking ordinary pull requests because documentation sites may rate-limit automation.
