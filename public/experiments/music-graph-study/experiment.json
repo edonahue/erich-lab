@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "slug": "music-graph-study",
   "title": "Music-Credit Graph Study Lab",
-  "description": "A concept guide, architecture plan, adaptive quiz, and flashcard lab for a distributed music-credit graph.",
+  "description": "A concept guide, Discogs data module, architecture plan, adaptive quiz, and flashcard lab for a distributed music-credit graph.",
   "entry": "app.html",
   "projectPath": "/projects/music-graph-study/",
   "mainSiteUrl": "https://erichdonahue.com",
@@ -21,6 +21,6 @@
   },
   "legacyEntries": ["music_graph_study_lab_complete_fixed.html"],
   "smoke": {
-    "sections": ["build", "concepts", "quiz", "flash", "references"]
+    "sections": ["build", "concepts", "discogs", "quiz", "flash", "references"]
   }
 }

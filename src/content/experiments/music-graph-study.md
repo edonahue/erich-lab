@@ -1,11 +1,12 @@
 ---
 slug: music-graph-study
 title: Music-Credit Graph Study Lab
-summary: A concept guide, architecture plan, adaptive quiz, and flashcard lab for a distributed music-credit graph.
+summary: A concept guide, Discogs data module, architecture plan, adaptive quiz, and flashcard lab for a distributed music-credit graph.
 status: Prototype
 kind: Study tool
 technologies:
   - Python
+  - Discogs API / Data Dumps
   - Docker Swarm
   - Redis / RQ
   - Parquet / DuckDB
@@ -15,11 +16,11 @@ sourceUrl: https://github.com/edonahue/erich-lab/tree/main/public/experiments/mu
 published: true
 featured: true
 created: 2026-06-27
-updated: 2026-06-28
+updated: 2026-06-29
 image: /images/experiments/music-graph-study.svg
 offline:
   status: full
-  note: The single-file edition includes the complete build plan, concept guide, official-reference links, quiz, flashcards, theme support, and browser-local progress tracking.
+  note: The single-file edition includes the complete build plan, Discogs acquisition module, concept guide, official-reference links, quiz, flashcards, theme support, and browser-local progress tracking.
   formats:
     - type: html
       label: Download offline HTML
@@ -28,7 +29,7 @@ offline:
       note: Save one self-contained HTML file and open it in a modern browser without a local server. External documentation links still require connectivity.
 ---
 
-This study lab now separates transferable technology concepts from the decisions made for one specific music-credit graph build.
+This study lab separates transferable technology concepts from the decisions made for one specific music-credit graph build. A dedicated Discogs module now turns the catalog source into an explicit acquisition, identity, rights, and normalization plan.
 
 ## Build plan
 
@@ -43,6 +44,20 @@ The guide explicitly documents the tradeoffs:
 - Memory-mapped adjacency arrays are a leading design subject to a benchmark gate, not a foregone conclusion
 - The private collection seeds development, while public outputs use derived catalog paths and aggregate descriptions
 - Static daily or curated challenges ship before bounded live arbitrary-artist search
+
+## Discogs data module
+
+The selected acquisition plan is hybrid and dump-first:
+
+- Discogs Spinner may provide an optional, private export of owned release IDs, but the projects remain separate
+- Monthly Discogs releases, artists, and masters dumps provide the first durable CC0 catalog snapshot
+- The labels dump is deferred until a concrete product or data-model need appears
+- A centralized API client handles targeted gaps, validation, and recent changes
+- Pi workers process bounded immutable records without receiving the Discogs credential
+- Original role text, PAN and ANV identity, release-versus-master semantics, track scope, and linked-versus-non-linked credits survive normalization
+- Public API-derived displays must satisfy the current Discogs freshness, notice, linking, and restricted-data rules
+
+The module also compares the very different download sizes of the four dumps, includes safe `lxml.iterparse` and API-rate-state exercises, and provides a project-preparation checklist. The implementation project remains in the separate [Networked Players repository](https://github.com/edonahue/networked-players).
 
 ## Concept guide
 
@@ -68,12 +83,12 @@ The adaptive quiz and flashcards are split into:
 - **Build decisions** for the selected architecture and its tradeoffs
 - **Mixed review** for combined retrieval practice
 
-Concept and build-decision mastery are tracked separately in the browser.
+The deeper Discogs module adds questions and cards across source selection, API behavior, identity, credits, rights, and ingestion decisions. Concept and build-decision mastery are tracked separately in the browser.
 
 ## Offline edition
 
-The full guide, exercises, references, quiz, and flashcards are generated as one downloadable HTML file. It contains its styles and scripts inline, preserves progress locally, and can be opened directly without running a local web server. External reference links naturally require a connection.
+The full guide, Discogs module, exercises, references, quiz, and flashcards are generated as one downloadable HTML file. It contains its styles and scripts inline, preserves progress locally, and can be opened directly without running a local web server. External reference links naturally require a connection.
 
 ## Public and private boundaries
 
-These pages describe logical roles, technologies, algorithms, tradeoffs, and measured outcomes rather than publishing a detailed map of the home network. Exact inventory, collection membership, addressing, storage paths, deployment commands, backup procedures, and operational runbooks remain private.
+These pages describe logical roles, technologies, algorithms, tradeoffs, source contracts, and measured outcomes rather than publishing a detailed map of the home network. Exact inventory, collection membership, addressing, storage paths, deployment commands, backup procedures, credentials, and operational runbooks remain private.

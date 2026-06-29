@@ -21,12 +21,17 @@ test('catalog, project notes, and wrapper stay connected', async ({ page }) => {
   await expect(conceptsTab).toHaveAttribute('aria-selected', 'true');
   await expect(frame.getByRole('heading', { name: 'Underlying concepts and tools' })).toBeVisible();
 
+  const discogsTab = frame.getByRole('tab', { name: 'Discogs' });
+  await discogsTab.click();
+  await expect(discogsTab).toHaveAttribute('aria-selected', 'true');
+  await expect(frame.getByRole('heading', { name: 'Discogs data and project preparation' })).toBeVisible();
+
   await frame.getByRole('tab', { name: 'Quiz' }).click();
   await frame.locator('input[name="answer"]').first().check();
   await frame.getByRole('button', { name: 'Check' }).click();
   await expect(frame.getByRole('button', { name: 'Next' })).toBeEnabled();
   await expect(frame.locator('input[name="answer"]').first()).toBeDisabled();
-  const stored = await frame.locator('body').evaluate(() => localStorage.getItem('musicGraphStudyV5'));
+  const stored = await frame.locator('body').evaluate(() => localStorage.getItem('musicGraphStudyV6'));
   expect(stored).toBeTruthy();
 
   await frame.getByRole('tab', { name: 'Flashcards' }).click();
@@ -44,6 +49,11 @@ test('offline edition remains self-contained and interactive', async ({ page }) 
   await page.goto('/downloads/music-graph-study.html');
   await expect(page.getByText('Offline copy · Music-Credit Graph Study Lab')).toBeVisible();
   expect(pageErrors).toEqual([]);
+
+  const discogsTab = page.getByRole('tab', { name: 'Discogs' });
+  await discogsTab.click();
+  await expect(discogsTab).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByRole('heading', { name: 'Discogs data and project preparation' })).toBeVisible();
 
   const referencesTab = page.getByRole('tab', { name: 'References' });
   await referencesTab.click();
