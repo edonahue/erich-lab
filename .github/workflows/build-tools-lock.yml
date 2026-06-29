@@ -1,0 +1,23 @@
+name: Build tools lockfile
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lockfile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Generate tools lockfile
+        run: npm install --package-lock-only --prefix tools --ignore-scripts
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tools-package-lock
+          path: tools/package-lock.json
