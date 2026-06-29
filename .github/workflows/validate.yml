@@ -22,13 +22,18 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - name: Install dependencies
+          cache-dependency-path: |
+            package-lock.json
+            tools/package-lock.json
+      - name: Install application dependencies
         run: npm ci
+      - name: Install locked development tooling
+        run: npm run tools:install
+      - name: Check formatting
+        run: npm run format:check
       - name: Validate content and build Astro
         run: npm run check
-      - name: Install Playwright without changing the lockfile
-        run: npm install --no-save --package-lock=false @playwright/test@1.55.0
       - name: Install Chromium for smoke tests
-        run: npx playwright install --with-deps chromium
+        run: npm run --prefix tools playwright:install -- --with-deps chromium
       - name: Run browser smoke tests
         run: npm run test:smoke
