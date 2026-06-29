@@ -57,7 +57,7 @@ The selected acquisition plan is hybrid and dump-first:
 - Original role text, PAN and ANV identity, release-versus-master semantics, track scope, and linked-versus-non-linked credits survive normalization
 - Public API-derived displays must satisfy the current Discogs freshness, notice, linking, and restricted-data rules
 
-The module also compares the very different download sizes of the four dumps, includes safe `lxml.iterparse` and API-rate-state exercises, and provides a project-preparation checklist. The implementation project remains in the separate [Networked Players repository](https://github.com/edonahue/networked-players).
+The module also compares the very different download sizes of the four dumps, includes safe `lxml.iterparse` and API-rate-state exercises, and provides a project-preparation checklist. The implementation project lives in the separate [Networked Players repository](https://github.com/edonahue/networked-players), which has since moved past planning into a first tested vertical slice: a versioned monthly manifest, resumable checksummed downloads, streaming release/track/credit normalization, Zstandard Parquet output, and DuckDB validation. No deployed application, public API, or full catalog is claimed yet.
 
 ## Concept guide
 
