@@ -4,12 +4,17 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "npm run build:offline && astro dev",
-    "build:offline": "node scripts/build-offline.mjs",
-    "build": "npm run build:offline && astro build",
+    "dev": "npm run build:experiments && astro dev",
+    "build:experiments": "node scripts/build-experiments.mjs",
+    "build": "npm run build:experiments && astro build",
     "preview": "astro preview",
-    "validate": "npm run build:offline && node scripts/validate-lab.mjs",
+    "validate:js": "node scripts/check-javascript.mjs",
+    "validate": "npm run build:experiments && npm run validate:js && node scripts/validate-lab.mjs",
     "check": "npm run validate && astro build",
+    "test:smoke": "playwright test",
+    "links:check": "node scripts/check-links.mjs",
+    "format": "npx --yes prettier@3.6.2 --write .",
+    "format:check": "npx --yes prettier@3.6.2 --check .",
     "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {

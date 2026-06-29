@@ -58,10 +58,14 @@ content:
         type: select
         required: true
         options:
-          values: [Idea, Prototype, Active, Paused, Archived]
+          values: [Idea, Prototype, Active, Paused, Archived, Graduated]
       - { name: kind, label: Type, type: string, required: true }
       - { name: technologies, label: Technologies, type: string, list: true }
       - { name: sourceUrl, label: Source URL, type: string, required: true }
+      - name: destinationUrl
+        label: Graduated destination URL
+        type: string
+        description: Required when status is Graduated. Points to the project's permanent home.
       - { name: published, label: Published, type: boolean, default: false }
       - { name: featured, label: Featured, type: boolean, default: false }
       - { name: created, label: Created, type: date, required: true }

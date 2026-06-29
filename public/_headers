@@ -7,5 +7,12 @@
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
 
-/experiments/music-graph-study/music_graph_study_lab_complete_fixed.html
+/downloads/*
+  X-Robots-Tag: noindex
+  Cache-Control: public, max-age=300
+
+/experiments/*/app.html
+  X-Robots-Tag: noindex
+
+/experiments/*/music_graph_study_lab_complete_fixed.html
   X-Robots-Tag: noindex

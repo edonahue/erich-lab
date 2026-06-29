@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "slug": "music-graph-study",
+  "title": "Music-Credit Graph Study Lab",
+  "description": "A concept guide, architecture plan, adaptive quiz, and flashcard lab for a distributed music-credit graph.",
+  "entry": "app.html",
+  "projectPath": "/projects/music-graph-study/",
+  "mainSiteUrl": "https://erichdonahue.com",
+  "downloads": [
+    {
+      "label": "Download HTML",
+      "href": "/downloads/music-graph-study.html",
+      "filename": "music-credit-graph-study-lab.html"
+    }
+  ],
+  "offline": {
+    "mode": "single-html",
+    "output": "music-graph-study.html",
+    "styles": ["study.css"],
+    "scripts": ["study-data.js", "study.js"]
+  },
+  "legacyEntries": ["music_graph_study_lab_complete_fixed.html"],
+  "smoke": {
+    "sections": ["build", "concepts", "quiz", "flash", "references"]
+  }
+}

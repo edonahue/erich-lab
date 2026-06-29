@@ -36,6 +36,7 @@ button, input, select { font: inherit; }
 a { color: var(--a); text-underline-offset: 3px; }
 a:hover, a:focus-visible { color: var(--w); }
 code { font-size: .92em; }
+[hidden] { display: none !important; }
 .shell { max-width: 1160px; margin: auto; padding: 22px; }
 header { display: flex; justify-content: space-between; gap: 20px; }
 h1, h2, h3 { font-family: Georgia, serif; }
@@ -71,11 +72,13 @@ h3 { margin-top: 0; }
   cursor: pointer;
 }
 .topnav button.on { background: var(--p); color: var(--i); }
+.topnav button:focus-visible { outline: 3px solid var(--a); outline-offset: 2px; }
 .view { display: none; }
 .view.on { display: block; }
 .toolbar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
 .control { padding: 11px; }
-.control label {
+.control label,
+.control-label {
   display: block;
   font-size: .74rem;
   color: var(--m);
@@ -91,11 +94,13 @@ select, .control button, input {
   color: var(--i);
 }
 .control button, .primary { background: var(--a) !important; color: #fff !important; font-weight: 700; }
+button:disabled, input:disabled { cursor: not-allowed; opacity: .7; }
 .dash { display: grid; grid-template-columns: 1.4fr .6fr; gap: 12px; align-items: start; }
 .quiz, .side, .guide { padding: 20px; }
 .side { position: sticky; top: 12px; }
 .meta { display: flex; justify-content: space-between; gap: 10px; color: var(--m); font-size: .85rem; }
-.question { font: 1.4rem/1.25 Georgia, serif; margin: 20px 0; }
+.question-set { min-width: 0; margin: 0; padding: 0; border: 0; }
+.question { font: 1.4rem/1.25 Georgia, serif; margin: 20px 0; padding: 0; color: var(--i); }
 .choice {
   display: block;
   padding: 12px;
@@ -105,6 +110,7 @@ select, .control button, input {
   background: var(--ctl);
   cursor: pointer;
 }
+.choice input { width: auto; padding: 0; }
 .choice.sel { border-color: var(--a); }
 .choice.good { border-color: var(--g); background: color-mix(in srgb, var(--g) 14%, var(--p)); }
 .choice.bad { border-color: var(--r); background: color-mix(in srgb, var(--r) 14%, var(--p)); }

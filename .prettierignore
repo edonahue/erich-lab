@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.astro/
+.wrangler/
+public/downloads/
+public/experiments/*/index.html
+public/experiments/*/music_graph_study_lab_complete_fixed.html
+package-lock.json
