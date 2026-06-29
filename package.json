@@ -12,10 +12,10 @@
     "validate:js": "node scripts/check-javascript.mjs",
     "validate": "npm run build:experiments && npm run validate:js && node scripts/validate-lab.mjs",
     "check": "npm run validate && astro build",
-    "test:smoke": "npm exec --prefix tools -- playwright test --config ../playwright.config.mjs",
+    "test:smoke": "npm run --prefix tools test:smoke",
     "links:check": "node scripts/check-links.mjs",
-    "format": "npm exec --prefix tools -- prettier --config ../prettier.config.mjs --write ..",
-    "format:check": "npm exec --prefix tools -- prettier --config ../prettier.config.mjs --check ..",
+    "format": "npm run --prefix tools format",
+    "format:check": "npm run --prefix tools format:check",
     "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
