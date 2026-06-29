@@ -1,9 +1,7 @@
 name: Build tooling lockfile
 
 on:
-  push:
-    branches:
-      - codex/lock-formatting-tooling
+  pull_request:
   workflow_dispatch:
 
 permissions:
