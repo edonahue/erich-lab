@@ -5,4 +5,6 @@ dist/
 public/downloads/
 public/experiments/*/index.html
 public/experiments/*/music_graph_study_lab_complete_fixed.html
+# Maintained as a portable standalone application and covered by dedicated syntax and browser checks.
+public/experiments/music-graph-study/app.html
 package-lock.json
