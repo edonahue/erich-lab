@@ -5,7 +5,7 @@
   "scripts": {
     "format": "prettier --config ../prettier.config.mjs --write ../package.json ../tools/package.json ../prettier.config.mjs",
     "format:check": "prettier --config ../prettier.config.mjs --check ../package.json ../tools/package.json ../prettier.config.mjs",
-    "test:smoke": "playwright test --config ../playwright.config.mjs",
+    "test:smoke": "playwright test --config playwright.config.mjs",
     "playwright:install": "playwright install"
   },
   "devDependencies": {
