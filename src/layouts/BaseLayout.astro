@@ -48,6 +48,32 @@ const imageUrl = new URL(image, Astro.site);
       })();
     </script>
     <title>{title}</title>
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Person",
+          "@id": "https://erichdonahue.com/#erich",
+          "name": "Erich Donahue",
+          "url": "https://erichdonahue.com/",
+          "sameAs": [
+            "https://erichdonahue.com/",
+            "https://github.com/edonahue",
+            "https://www.linkedin.com/in/erichdonahue/",
+            "https://x.com/erichdonahue"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://lab.erichdonahue.com/#website",
+          "url": "https://lab.erichdonahue.com/",
+          "name": "Erich's Lab",
+          "description": "Small tools, studies, and working experiments by Erich Donahue.",
+          "author": { "@id": "https://erichdonahue.com/#erich" },
+          "isPartOf": { "@id": "https://erichdonahue.com/#website" }
+        }
+      ]
+    })} />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
