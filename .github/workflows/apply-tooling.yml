@@ -1,0 +1,31 @@
+name: Apply locked tooling
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.head_ref == 'codex/lock-formatting-tooling-v2'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: codex/lock-formatting-tooling-v2
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - name: Refresh maintained files
+        run: |
+          npm install --package-lock-only --ignore-scripts
+          rm -f .prettierrc.json
+          npm ci
+          npm run format
+      - uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: Refresh locked development tooling
