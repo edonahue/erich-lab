@@ -2,6 +2,12 @@
   "name": "erich-lab-tooling",
   "private": true,
   "type": "module",
+  "scripts": {
+    "format": "prettier --config ../prettier.config.mjs --write ..",
+    "format:check": "prettier --config ../prettier.config.mjs --check ..",
+    "test:smoke": "playwright test --config ../playwright.config.mjs",
+    "playwright:install": "playwright install"
+  },
   "devDependencies": {
     "@playwright/test": "1.61.1",
     "prettier": "3.8.4",
