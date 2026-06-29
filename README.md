@@ -12,29 +12,33 @@ Requires Node.js 22 or newer.
 
 ```bash
 npm ci
+npm run tools:install
 npm run dev
 ```
 
-Validate manifests, generated artifacts, JavaScript, content, and the Astro production build:
+The application and deployment dependencies remain in the root lockfile. Formatting and browser-test tools are isolated under `tools/` with exact versions in `tools/package-lock.json`, so CI and local development use the same toolchain without adding Playwright or Prettier to the production dependency tree.
+
+Validate formatting, manifests, generated artifacts, JavaScript, content, and the Astro production build:
 
 ```bash
+npm run format:check
 npm run check
 ```
 
 Run the browser smoke suite after a production build:
 
 ```bash
-npm install --no-save --package-lock=false @playwright/test@1.55.0
-npx playwright install chromium
+npm run --prefix tools playwright:install -- chromium
 npm run test:smoke
 ```
 
-Formatting is available through pinned Prettier commands without adding another lockfile dependency:
+Apply repository formatting:
 
 ```bash
 npm run format
-npm run format:check
 ```
+
+`prettier.config.mjs` is the canonical formatter configuration. It loads `prettier-plugin-astro` and explicitly selects the Astro parser for `.astro` files.
 
 ## Experiment structure
 
@@ -84,7 +88,7 @@ There is no scaffold command yet. The structure should prove itself with a secon
 6. Add preview media under `public/images/experiments/` when useful.
 7. Add or extend browser smoke coverage for interactive behavior.
 8. Record consequential decisions using `docs/templates/ADR.md`.
-9. Run `npm run check` and `npm run test:smoke`.
+9. Run `npm run format`, `npm run format:check`, `npm run check`, and `npm run test:smoke`.
 
 The filename, frontmatter slug, manifest slug, project URL, and experiment URL must agree:
 
@@ -149,11 +153,12 @@ The repository includes:
 - Zod-validated Astro content
 - Cross-file manifest and generated-artifact validation
 - JavaScript syntax checks for scripts and standalone experiments
+- Astro-aware Prettier formatting enforced in CI
 - Playwright smoke tests for public routes, iframe interaction, local state, offline use, redirects, and sitemap output
+- Exact-version development tooling isolated under `tools/`
 - Scheduled external-link checking that creates or updates a GitHub issue on failure
 - Low-volume Dependabot updates for npm and GitHub Actions
-- EditorConfig and Prettier configuration
-- Conservative security and indexing headers
+- EditorConfig and conservative security and indexing headers
 
 External links are checked on a schedule rather than blocking ordinary pull requests because documentation sites may rate-limit automation.
 
