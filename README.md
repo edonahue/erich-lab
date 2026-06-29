@@ -24,12 +24,11 @@ npm run check
 Run the browser smoke suite after a production build:
 
 ```bash
-npm install --no-save --package-lock=false @playwright/test@1.55.0
 npx playwright install chromium
 npm run test:smoke
 ```
 
-Formatting is available through pinned Prettier commands without adding another lockfile dependency:
+Format all files or check formatting:
 
 ```bash
 npm run format
