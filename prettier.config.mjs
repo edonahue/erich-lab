@@ -1,16 +1,1 @@
-export default {
-  plugins: ['prettier-plugin-astro'],
-  printWidth: 120,
-  singleQuote: true,
-  trailingComma: 'all',
-  overrides: [
-    {
-      files: '*.astro',
-      options: { parser: 'astro' },
-    },
-    {
-      files: ['*.yml', '*.yaml'],
-      options: { singleQuote: false },
-    },
-  ],
-};
+export { default } from './tools/prettier.config.mjs';
