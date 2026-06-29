@@ -32,7 +32,7 @@ This study lab now separates transferable technology concepts from the decisions
 
 ## Build plan
 
-The project begins with a private collection-derived seed, expands through adjacent catalog credits, and then scales toward a broader evidence-bearing graph. An SSD-backed x86 host initially performs the Ansible control-node, Docker Swarm manager, and application-state roles. Four Raspberry Pi 3B+ workers run a consistent 64-bit operating system and execute bounded jobs against versioned read-only graph snapshots.
+The project begins with a private collection-derived seed, expands through adjacent catalog credits, and then scales toward a broader evidence-bearing graph. An SSD-backed x86 host initially performs the Ansible control-node, Docker Swarm manager, and application-state roles. Four Raspberry Pi 3B workers run a consistent 64-bit operating system and execute bounded jobs against versioned read-only graph snapshots.
 
 The guide explicitly documents the tradeoffs:
 
