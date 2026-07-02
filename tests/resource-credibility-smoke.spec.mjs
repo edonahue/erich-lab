@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 
-test('resource credibility ratings and personalized defaults work', async ({ page }) => {
+test('resource ratings and personalized defaults work', async ({ page }) => {
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
-  await page.goto('/experiments/cloud-data-ai-certification/app.html');
+  await page.goto('/experiments/cloud-data-ai-certification/app-reviewed.html');
 
   await page.getByRole('tab', { name: 'Resources' }).click();
   const credibility = page.locator('#resourceCredibility');
@@ -28,7 +28,7 @@ test('resource credibility ratings and personalized defaults work', async ({ pag
   expect(errors).toEqual([]);
 });
 
-test('resource credibility layer is packaged into the offline edition', async ({ page }) => {
+test('resource rating layer is packaged offline', async ({ page }) => {
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/downloads/cloud-data-ai-certification.html');
