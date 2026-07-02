@@ -22,7 +22,7 @@
   DATA.resources.forEach((resource) => {
     resource.credibility ||= defaultCredibility(resource);
     resource.role ||= resource.priority ? 'Primary study resource' : 'Optional supporting resource';
-    resource.integrity ||= resource.type === 'practice' ? 'Normal third-party practice risk' : 'Low';
+    resource.integrity ||= resource.type === 'practice' ? 'Normal external-material review' : 'Low';
     resource.reviewed ||= '2026-07-02';
   });
 
@@ -33,8 +33,8 @@
       credibility: 'official',
       role: 'Final readiness calibration',
       price: 'Current registration price shown by Snowflake',
-      integrity: 'Low — first-party practice material',
-      evidence: 'Snowflake says its practice exams use the same specifications and domain weightings as the live certification exams.',
+      integrity: 'Low — first-party material',
+      evidence: 'Snowflake states that its practice exams use the same specifications and domain weightings as the corresponding certification exams.',
       reviewed: '2026-07-02',
     });
   }
@@ -51,12 +51,12 @@
       url: cautionUrl,
       role: 'Not recommended for this study plan; listed for transparency',
       price: 'Sale pricing varies; verify at checkout',
-      integrity: 'High question-provenance risk',
+      integrity: 'Unverified source quality',
       evidence:
-        'The provider describes updates informed by feedback about live-exam appearances, its own customer reviews claim substantial exact overlap, and Trustpilot currently withholds the company rating after removing fake reviews.',
+        'Provider marketing, customer testimonials, mixed accuracy reports, and independent review-platform signals create enough reliability uncertainty to warrant caution.',
       reviewed: '2026-07-02',
       note:
-        'A very large, recently updated practice package. The volume may be useful for drilling, but its provenance claims, mixed accuracy reports, and review-platform warning make it a poor fit for a credential intended to demonstrate genuine understanding.',
+        'A very large, recently updated practice package. Its volume may appeal to learners seeking extensive drilling, but uncertain sourcing and mixed external feedback make it a poor fit for this focused readiness plan.',
     });
   }
 
@@ -101,7 +101,7 @@
       <div><strong class="trust-official">Official</strong><span>First-party exam guides, documentation, or practice.</span></div>
       <div><strong class="trust-vetted">Vetted</strong><span>Third-party material selected as a primary recommendation.</span></div>
       <div><strong class="trust-supplemental">Supplemental</strong><span>Potentially useful, but not readiness-defining.</span></div>
-      <div><strong class="trust-caution">Caution</strong><span>Material with provenance, accuracy, reputation, or integrity concerns.</span></div>`;
+      <div><strong class="trust-caution">Caution</strong><span>Material with source-quality, accuracy, or reputation concerns.</span></div>`;
     toolbar.insertAdjacentElement('afterend', legend);
   }
 
@@ -160,7 +160,7 @@
           <div class="resource-review">
             <div><b>Best role</b><span>${resource.role}</span></div>
             <div><b>Price context</b><span>${resource.price || (resource.cost === 'free' ? 'Free' : 'Check current provider price')}</span></div>
-            <div><b>Integrity risk</b><span>${resource.integrity}</span></div>
+            <div><b>Source-quality review</b><span>${resource.integrity}</span></div>
             <div><b>Last reviewed</b><span>${resource.reviewed}</span></div>
             ${resource.evidence ? `<div class="resource-evidence"><strong>Why this rating:</strong> ${resource.evidence}</div>` : ''}
           </div>
