@@ -39,27 +39,6 @@
     });
   }
 
-  const cautionUrl = 'https://skillcertpro.com/product/snowflake-snowpro-core-practice-tests/';
-  if (!DATA.resources.some((resource) => resource.url === cautionUrl)) {
-    DATA.resources.push({
-      cert: 'snowpro',
-      type: 'practice',
-      cost: 'paid',
-      priority: false,
-      credibility: 'caution',
-      title: 'SkillCertPro SnowPro Core practice tests',
-      url: cautionUrl,
-      role: 'Not recommended for this study plan; listed for transparency',
-      price: 'Sale pricing varies; verify at checkout',
-      integrity: 'Unverified source quality',
-      evidence:
-        'Provider marketing, customer testimonials, mixed accuracy reports, and independent review-platform signals create enough reliability uncertainty to warrant caution.',
-      reviewed: '2026-07-02',
-      note:
-        'A very large, recently updated practice package. Its volume may appeal to learners seeking extensive drilling, but uncertain sourcing and mixed external feedback make it a poor fit for this focused readiness plan.',
-    });
-  }
-
   function addStyles() {
     const style = document.createElement('style');
     style.id = 'resource-review-styles';
@@ -101,7 +80,7 @@
       <div><strong class="trust-official">Official</strong><span>First-party exam guides, documentation, or practice.</span></div>
       <div><strong class="trust-vetted">Vetted</strong><span>Third-party material selected as a primary recommendation.</span></div>
       <div><strong class="trust-supplemental">Supplemental</strong><span>Potentially useful, but not readiness-defining.</span></div>
-      <div><strong class="trust-caution">Caution</strong><span>Material with source-quality, accuracy, or reputation concerns.</span></div>`;
+      <div><strong class="trust-caution">Caution</strong><span>Material with source-quality, accuracy, or reputation concerns; excluded unless explicitly retained.</span></div>`;
     toolbar.insertAdjacentElement('afterend', legend);
   }
 
