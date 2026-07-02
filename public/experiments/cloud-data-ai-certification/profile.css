@@ -1,1 +1,20 @@
-.personal-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.personal-grid button{min-height:44px;padding:9px 13px;border:1px solid var(--l);border-radius:8px;background:var(--a);color:#fff;font-weight:800;cursor:pointer}@media(max-width:900px){.personal-grid{grid-template-columns:1fr}}
+.personal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.personal-grid button {
+  min-height: 44px;
+  padding: 9px 13px;
+  border: 1px solid var(--l);
+  border-radius: 8px;
+  background: var(--a);
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+@media (max-width: 900px) {
+  .personal-grid {
+    grid-template-columns: 1fr;
+  }
+}
