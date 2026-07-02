@@ -16,11 +16,25 @@
   "offline": {
     "mode": "single-html",
     "output": "cloud-data-ai-certification.html",
-    "styles": ["study.css"],
-    "scripts": ["study-data.js", "study-resources.js", "study-practice.js", "study.js"]
+    "styles": ["study.css", "profile.css"],
+    "scripts": [
+      "study-data.js",
+      "study-resources.js",
+      "study-practice.js",
+      "study.js",
+      "profile.js"
+    ]
   },
   "legacyEntries": [],
   "smoke": {
-    "sections": ["roadmap", "snowpro", "ai", "saa", "resources", "quiz", "flash"]
+    "sections": [
+      "roadmap",
+      "snowpro",
+      "ai",
+      "saa",
+      "resources",
+      "quiz",
+      "flash"
+    ]
   }
 }
