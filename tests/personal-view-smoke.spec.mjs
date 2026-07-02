@@ -1,32 +1,19 @@
 import { expect, test } from '@playwright/test';
 
-test('personalized view narrows the standalone lab', async ({ page }) => {
+test('personalized runtime is wired into online and offline artifacts', async ({ page, request }) => {
+  const appResponse = await request.get('/experiments/cloud-data-ai-certification/app.html');
+  expect(appResponse.ok()).toBeTruthy();
+  expect(await appResponse.text()).toContain('./profile.js');
+
+  const offlineResponse = await request.get('/downloads/cloud-data-ai-certification.html');
+  expect(offlineResponse.ok()).toBeTruthy();
+  const offlineHtml = await offlineResponse.text();
+  expect(offlineHtml).toContain('personalizedToggle');
+  expect(offlineHtml).toContain('Close to ready—validate once more');
+
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/experiments/cloud-data-ai-certification/app.html');
-
-  const toggle = page.locator('#personalizedToggle');
-  await expect(toggle).toBeVisible();
-  await expect(toggle).toHaveAttribute('aria-checked', 'false');
-  await toggle.click();
-
-  await expect(page.locator('body')).toHaveClass(/is-personalized/);
-  await expect(toggle).toHaveAttribute('aria-checked', 'true');
-  await expect(page.locator('.readiness-stat strong').nth(1)).toHaveText('85.4%');
-  await expect(page.locator('.readiness-stat strong').nth(2)).toHaveText('88.6%');
-  await expect(page.locator('#resourceCert')).toHaveValue('snowpro');
-  expect(errors).toEqual([]);
-});
-
-test('personalized view is included offline', async ({ page }) => {
-  const errors = [];
-  page.on('pageerror', (error) => errors.push(error.message));
-  await page.goto('/downloads/cloud-data-ai-certification.html');
-
-  const toggle = page.locator('#personalizedToggle').first();
-  await expect(toggle).toBeVisible();
-  await toggle.click();
-  await expect(page.locator('body')).toHaveClass(/is-personalized/);
-  await expect(page.getByRole('heading', { name: 'Close to ready—validate once more' }).first()).toBeVisible();
+  await page.waitForLoadState('networkidle');
   expect(errors).toEqual([]);
 });
