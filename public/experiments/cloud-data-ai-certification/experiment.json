@@ -23,7 +23,8 @@
       "study-practice.js",
       "study.js",
       "profile-core.js",
-      "resource-reviews.js"
+      "resource-reviews.js",
+      "resource-mode-sync.js"
     ]
   },
   "legacyEntries": [],
