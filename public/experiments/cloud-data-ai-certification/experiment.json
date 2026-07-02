@@ -17,7 +17,14 @@
     "mode": "single-html",
     "output": "cloud-data-ai-certification.html",
     "styles": ["study.css"],
-    "scripts": ["study-data.js", "study-resources.js", "study-practice.js", "study.js", "profile.js"]
+    "scripts": [
+      "study-data.js",
+      "study-resources.js",
+      "study-practice.js",
+      "study.js",
+      "profile-core.js",
+      "resource-reviews.js"
+    ]
   },
   "legacyEntries": [],
   "smoke": {
