@@ -19,7 +19,7 @@ updated: 2026-07-02
 image: /images/experiments/cloud-data-ai-certification.svg
 offline:
   status: limited
-  note: The single-file edition includes the complete roadmap, study modules, resource descriptions, flashcards, adjustable pace, and browser-local progress. Linked courses, videos, podcasts, and documentation require connectivity.
+  note: The single-file edition includes the complete roadmap, personalized SnowPro readiness view, study modules, resource descriptions, flashcards, adjustable pace, and browser-local progress. Linked courses, videos, podcasts, and documentation require connectivity.
   formats:
     - type: html
       label: Download offline HTML
@@ -47,6 +47,15 @@ The initial spark came from a CCNA course post by NetworkChuck, a favorite YouTu
 - Search and filtering by credential, format, and cost
 - Browser-local progress, flashcards, and export/import
 - A generated single-file edition for travel and offline review
+- A top-level **Personalized** mode that narrows the lab to the active SnowPro objective
+
+## Personalized SnowPro view
+
+The personalized mode incorporates six independently generated, representative practice sessions: **6/10, 20/20, 16/19, 17/20, 8/10, and 9/10**. Together they total **76/89 (85.4%)**; the five sessions after the first baseline total **70/79 (88.6%)**.
+
+The lab interprets that pattern as **close to ready, with one final validation step**. It highlights broad concept retention, repeated scenario success, and strong consistency after the baseline while keeping the remaining uncertainties visible: no retained domain-level score breakdown, no full 100-question timed simulation, and continued exposure to exact feature rules and wording traps.
+
+When Personalized mode is enabled, the lab hides the later AWS credentials, limits the checklist and booking view to SnowPro, and automatically filters resources, quizzes, and flashcards to SnowPro. The final gate is one fresh 100-question mixed practice session completed within 115 minutes, targeting at least 80–85% with no domain below 70%.
 
 ## Applied portfolio thread
 
@@ -58,4 +67,4 @@ The lab intentionally offers more resources than one person should use at once. 
 
 ## Public and private boundaries
 
-The public artifact describes generic technologies, learning goals, architectural patterns, and portfolio decisions. It does not publish employer systems, internal Disney architecture, credentials, account identifiers, private network topology, cloud keys, personal datasets, billing details, or operational runbooks. Progress remains in browser local storage and is not sent to a backend.
+The public artifact describes generic technologies, learning goals, architectural patterns, portfolio decisions, and the intentionally shared SnowPro practice-score history above. It does not publish employer systems, internal Disney architecture, credentials, account identifiers, private network topology, cloud keys, personal datasets, billing details, or operational runbooks. Browser-generated progress remains in local storage and is not sent to a backend.
