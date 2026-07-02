@@ -6,14 +6,14 @@ Build a personal, public study artifact that turns three complementary certifica
 
 ## Public outcome
 
-Visitors can inspect the rationale, adjust a study pace, complete a detailed checklist, browse a curated multi-format resource library, answer warm-up questions, review flashcards, export/import progress, and download a self-contained offline copy.
+Visitors can inspect the rationale, adjust a study pace, complete a detailed checklist, browse a curated multi-format resource library, answer original warm-up questions, review flashcards, export/import progress, and download a self-contained offline copy.
 
 ## Current maturity
 
 - Status: Prototype
 - Experiment level: 2 interactive lab
-- First release: complete three-certification roadmap, detailed modules, curated resources, checklist, warm-up quiz, flashcards, and offline artifact
-- Immediate follow-up: realistic blueprint-weighted diagnostic pretests and result-driven personalization
+- Current release: complete three-certification roadmap, detailed modules, curated resources, checklist, original warm-up quiz, adaptive flashcards, and offline artifact
+- Calibration strategy: internal performance identifies study priorities; current official and reputable external practice material remains the exam-readiness gate
 
 ## Core interaction
 
@@ -21,11 +21,11 @@ The user chooses among Roadmap, three certification detail sections, Resources, 
 
 ## Certification scope
 
-| Credential | Role in sequence | Current exam version |
-| --- | --- | --- |
-| SnowPro Core | Immediate data-platform relevance | COF-C03 |
-| AWS Certified AI Practitioner | Compact AI/product signal and AWS bridge | AIF-C01 |
-| AWS Solutions Architect – Associate | Broad cloud-architecture credibility | SAA-C03 |
+| Credential                          | Role in sequence                         | Current exam version |
+| ----------------------------------- | ---------------------------------------- | -------------------- |
+| SnowPro Core                        | Immediate data-platform relevance        | COF-C03              |
+| AWS Certified AI Practitioner       | Compact AI/product signal and AWS bridge | AIF-C01              |
+| AWS Solutions Architect – Associate | Broad cloud-architecture credibility     | SAA-C03              |
 
 CCNA is documented as the original inspiration and a possible later branch. It is not included as a fourth active exam plan because that would dilute the initial sequence and extend the calendar substantially.
 
@@ -33,9 +33,9 @@ CCNA is documented as the original inspiration and a possible later branch. It i
 
 - Exam structure, domains, costs, candidate profiles, and service scope are derived from current official Snowflake and AWS certification pages and exam guides.
 - Official documentation and training links remain external hyperlinks.
-- Third-party courses, books, practice exams, podcasts, and videos are described and linked; their content is not copied or redistributed.
+- Third-party courses, books, practice resources, podcasts, and videos are described and linked; their content is not copied or redistributed.
 - Quiz and flashcard text is original authorship based on public objectives and documentation.
-- The planned diagnostic banks must remain independently authored and may not reproduce, reconstruct, or solicit protected live exam questions.
+- The lab does not reproduce, reconstruct, or solicit protected live certification questions.
 
 ## Public and private boundary
 
@@ -92,11 +92,11 @@ The full roadmap, study modules, resource descriptions, quiz, flashcards, and pr
 - [x] Adjustable schedule and local checklist
 - [x] Curated resources across requested formats
 - [x] Original warm-up quiz and adaptive flashcards
+- [x] Quiz-domain results that can guide study emphasis
 - [x] Export/import and reset behavior
 - [x] Full offline artifact declaration
 - [x] Public project notes and experiment manifest
 - [x] Dedicated smoke coverage
-- [ ] Blueprint-weighted diagnostic pretests and result-driven personalization
 - [ ] Manual iPhone Safari acceptance check
 
 ## Graduation or retirement criteria
