@@ -14,5 +14,7 @@ public/experiments/cloud-data-ai-certification/study-resources.js
 public/experiments/cloud-data-ai-certification/study.css
 public/experiments/cloud-data-ai-certification/study.js
 public/experiments/cloud-data-ai-certification/profile.js
+public/experiments/cloud-data-ai-certification/profile-core.js
+public/experiments/cloud-data-ai-certification/resource-reviews.js
 tests/certification-lab-smoke.spec.mjs
 package-lock.json
