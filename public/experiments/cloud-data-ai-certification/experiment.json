@@ -3,7 +3,7 @@
   "slug": "cloud-data-ai-certification",
   "title": "Cloud, Data & AI Certification Lab",
   "description": "A personalized roadmap, resource library, quiz, and flashcard lab for SnowPro Core, AWS AI Practitioner, and AWS Solutions Architect Associate.",
-  "entry": "app.html",
+  "entry": "app-reviewed.html",
   "projectPath": "/projects/cloud-data-ai-certification/",
   "mainSiteUrl": "https://erichdonahue.com",
   "downloads": [
@@ -17,7 +17,15 @@
     "mode": "single-html",
     "output": "cloud-data-ai-certification.html",
     "styles": ["study.css"],
-    "scripts": ["study-data.js", "study-resources.js", "study-practice.js", "study.js", "profile.js"]
+    "scripts": [
+      "study-data.js",
+      "study-resources.js",
+      "study-practice.js",
+      "study.js",
+      "profile-core.js",
+      "resource-reviews.js",
+      "resource-mode-sync.js"
+    ]
   },
   "legacyEntries": [],
   "smoke": {

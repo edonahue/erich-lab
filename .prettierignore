@@ -8,11 +8,14 @@ public/experiments/*/music_graph_study_lab_complete_fixed.html
 # Maintained as portable standalone applications and covered by dedicated syntax and browser checks.
 public/experiments/music-graph-study/app.html
 public/experiments/cloud-data-ai-certification/app.html
+public/experiments/cloud-data-ai-certification/app-reviewed.html
 public/experiments/cloud-data-ai-certification/study-data.js
 public/experiments/cloud-data-ai-certification/study-practice.js
 public/experiments/cloud-data-ai-certification/study-resources.js
 public/experiments/cloud-data-ai-certification/study.css
 public/experiments/cloud-data-ai-certification/study.js
 public/experiments/cloud-data-ai-certification/profile.js
+public/experiments/cloud-data-ai-certification/profile-core.js
+public/experiments/cloud-data-ai-certification/resource-reviews.js
 tests/certification-lab-smoke.spec.mjs
 package-lock.json
