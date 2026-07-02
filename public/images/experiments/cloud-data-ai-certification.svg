@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Cloud, Data and AI Certification Lab</title>
+  <desc id="desc">Three connected study cards representing Snowflake, artificial intelligence, and cloud architecture.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#101a24"/><stop offset="1" stop-color="#27344f"/></linearGradient>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#76a9dd"/><stop offset="1" stop-color="#b499ef"/></linearGradient>
+  </defs>
+  <rect width="1200" height="630" rx="36" fill="url(#bg)"/>
+  <circle cx="1080" cy="80" r="190" fill="#b499ef" opacity=".08"/>
+  <circle cx="120" cy="600" r="250" fill="#76a9dd" opacity=".08"/>
+  <text x="78" y="104" fill="#76a9dd" font-family="system-ui,sans-serif" font-size="24" font-weight="700" letter-spacing="4">ERICH'S LAB</text>
+  <text x="78" y="174" fill="#f3f6f8" font-family="Georgia,serif" font-size="58" font-weight="700">Cloud, Data &amp; AI</text>
+  <text x="78" y="236" fill="#f3f6f8" font-family="Georgia,serif" font-size="58" font-weight="700">Certification Lab</text>
+  <path d="M252 424H948" stroke="url(#line)" stroke-width="8" stroke-linecap="round"/>
+  <g font-family="system-ui,sans-serif">
+    <g transform="translate(88 316)"><rect width="300" height="194" rx="24" fill="#172633" stroke="#ffffff30"/><circle cx="52" cy="52" r="25" fill="#76a9dd"/><text x="52" y="61" text-anchor="middle" fill="#10202b" font-size="25" font-weight="900">1</text><text x="28" y="112" fill="#f3f6f8" font-size="27" font-weight="800">SnowPro Core</text><text x="28" y="149" fill="#b8c4cb" font-size="18">Data platform depth</text></g>
+    <g transform="translate(450 316)"><rect width="300" height="194" rx="24" fill="#172633" stroke="#ffffff30"/><circle cx="52" cy="52" r="25" fill="#9c87dc"/><text x="52" y="61" text-anchor="middle" fill="#151426" font-size="25" font-weight="900">2</text><text x="28" y="112" fill="#f3f6f8" font-size="27" font-weight="800">AI Practitioner</text><text x="28" y="149" fill="#b8c4cb" font-size="18">Applied AI judgment</text></g>
+    <g transform="translate(812 316)"><rect width="300" height="194" rx="24" fill="#172633" stroke="#ffffff30"/><circle cx="52" cy="52" r="25" fill="#e09960"/><text x="52" y="61" text-anchor="middle" fill="#2a180b" font-size="25" font-weight="900">3</text><text x="28" y="112" fill="#f3f6f8" font-size="27" font-weight="800">Solutions Architect</text><text x="28" y="149" fill="#b8c4cb" font-size="18">Cloud design breadth</text></g>
+  </g>
+  <text x="78" y="580" fill="#b8c4cb" font-family="system-ui,sans-serif" font-size="22">A personalized, offline-capable roadmap with resources, practice, and portfolio work.</text>
+</svg>

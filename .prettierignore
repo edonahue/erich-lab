@@ -5,6 +5,13 @@ dist/
 public/downloads/
 public/experiments/*/index.html
 public/experiments/*/music_graph_study_lab_complete_fixed.html
-# Maintained as a portable standalone application and covered by dedicated syntax and browser checks.
+# Maintained as portable standalone applications and covered by dedicated syntax and browser checks.
 public/experiments/music-graph-study/app.html
+public/experiments/cloud-data-ai-certification/app.html
+public/experiments/cloud-data-ai-certification/study-data.js
+public/experiments/cloud-data-ai-certification/study-practice.js
+public/experiments/cloud-data-ai-certification/study-resources.js
+public/experiments/cloud-data-ai-certification/study.css
+public/experiments/cloud-data-ai-certification/study.js
+tests/certification-lab-smoke.spec.mjs
 package-lock.json
