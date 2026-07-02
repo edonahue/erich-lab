@@ -1,7 +1,7 @@
 'use strict';
 
 (() => {
-  const scripts = ['./profile-core.js', './resource-reviews.js'];
+  const scripts = ['./profile-core.js', './resource-reviews.js', './resource-mode-sync.js'];
   let chain = Promise.resolve();
   scripts.forEach((src) => {
     chain = chain.then(
