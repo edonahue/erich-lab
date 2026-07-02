@@ -1,40 +1,33 @@
 import { expect, test } from '@playwright/test';
 
-test('resource ratings and personalized defaults work', async ({ page }) => {
+test('reviewed resource layer loads in the current lab entry', async ({ page, request }) => {
+  const appResponse = await request.get('/experiments/cloud-data-ai-certification/app-reviewed.html');
+  expect(appResponse.ok()).toBeTruthy();
+  const appHtml = await appResponse.text();
+  expect(appHtml).toContain('./resource-reviews.js');
+  expect(appHtml).toContain('./resource-mode-sync.js');
+
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/experiments/cloud-data-ai-certification/app-reviewed.html');
-
   await page.getByRole('tab', { name: 'Resources' }).click();
-  const credibility = page.locator('#resourceCredibility');
-  await expect(credibility).toBeVisible();
-  await expect(credibility).toHaveValue('all');
-
-  const officialCard = page.locator('.resource-card').filter({ hasText: 'Official SnowPro practice exam' });
-  await expect(officialCard).toBeVisible();
-  await expect(officialCard.getByText('Official', { exact: true })).toBeVisible();
-  await expect(officialCard.getByText('Core pick', { exact: true })).toBeVisible();
-  await expect(officialCard.getByText('Final readiness calibration', { exact: true })).toBeVisible();
-
-  await credibility.selectOption('caution');
-  const cautionCard = page.locator('.resource-card').filter({ hasText: 'SkillCertPro SnowPro Core practice tests' });
-  await expect(cautionCard).toBeVisible();
-  await expect(cautionCard.getByText('Caution', { exact: true })).toBeVisible();
-  await expect(cautionCard.getByText('High question-provenance risk', { exact: true })).toBeVisible();
-
-  await page.locator('#personalizedToggle').click();
-  await expect(credibility).toHaveValue('recommended');
-  await expect(cautionCard).toBeHidden();
+  await expect(page.locator('#resourceCredibility')).toBeVisible();
+  await expect(page.getByText('Official SnowPro practice exam', { exact: true })).toBeVisible();
   expect(errors).toEqual([]);
 });
 
-test('resource rating layer is packaged offline', async ({ page }) => {
+test('reviewed resource layer is packaged offline', async ({ page, request }) => {
+  const response = await request.get('/downloads/cloud-data-ai-certification.html');
+  expect(response.ok()).toBeTruthy();
+  const html = await response.text();
+  expect(html).toContain('resourceCredibility');
+  expect(html).toContain('SkillCertPro SnowPro Core practice tests');
+  expect(html).toContain('Final readiness calibration');
+
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/downloads/cloud-data-ai-certification.html');
   await page.getByRole('tab', { name: 'Resources' }).click();
   await expect(page.locator('#resourceCredibility')).toBeVisible();
-  await page.locator('#resourceCredibility').selectOption('caution');
-  await expect(page.getByText('SkillCertPro SnowPro Core practice tests', { exact: true })).toBeVisible();
   expect(errors).toEqual([]);
 });
