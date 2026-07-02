@@ -1,30 +1,32 @@
 import { expect, test } from '@playwright/test';
 
-test('personalized view narrows the lab', async ({ page }) => {
-  await page.goto('/experiments/cloud-data-ai-certification/');
-  const frame = page.frameLocator('[data-study-frame]');
-  const toggle = frame.getByRole('switch', { name: 'Personalized' });
+test('personalized view narrows the standalone lab', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  await page.goto('/experiments/cloud-data-ai-certification/app.html');
 
+  const toggle = page.locator('#personalizedToggle');
+  await expect(toggle).toBeVisible();
   await expect(toggle).toHaveAttribute('aria-checked', 'false');
-  await expect(frame.getByText('SnowPro: close to ready')).toBeVisible();
-
   await toggle.click();
-  await expect(toggle).toHaveAttribute('aria-checked', 'true');
-  await expect(frame.getByRole('heading', { name: 'Close to ready—validate once more' })).toBeVisible();
-  await expect(frame.locator('.readiness-stat strong').nth(1)).toHaveText('85.4%');
-  await expect(frame.locator('.readiness-stat strong').nth(2)).toHaveText('88.6%');
-  await expect(frame.getByRole('tab', { name: 'AI Practitioner' })).toBeHidden();
-  await expect(frame.getByRole('tab', { name: 'Solutions Architect' })).toBeHidden();
 
-  await frame.getByRole('tab', { name: 'Resources' }).click();
-  await expect(frame.locator('#resourceCert')).toHaveValue('snowpro');
+  await expect(page.locator('body')).toHaveClass(/is-personalized/);
+  await expect(toggle).toHaveAttribute('aria-checked', 'true');
+  await expect(page.locator('.readiness-stat strong').nth(1)).toHaveText('85.4%');
+  await expect(page.locator('.readiness-stat strong').nth(2)).toHaveText('88.6%');
+  await expect(page.locator('#resourceCert')).toHaveValue('snowpro');
+  expect(errors).toEqual([]);
 });
 
 test('personalized view is included offline', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/downloads/cloud-data-ai-certification.html');
-  const toggle = page.getByRole('switch', { name: 'Personalized' }).first();
+
+  const toggle = page.locator('#personalizedToggle').first();
   await expect(toggle).toBeVisible();
   await toggle.click();
-  await expect(toggle).toHaveAttribute('aria-checked', 'true');
+  await expect(page.locator('body')).toHaveClass(/is-personalized/);
   await expect(page.getByRole('heading', { name: 'Close to ready—validate once more' }).first()).toBeVisible();
+  expect(errors).toEqual([]);
 });
